@@ -1,0 +1,19 @@
+useDynLib(animalmove,.registration=TRUE)
+
+## base packages
+import(methods)
+import(lme4)
+import(chron)
+import(splancs)
+import(adehabitatHR)
+import(pgirmess)
+import(sciplot)
+import(maptools)
+import(sp)
+import(lme4)
+import(languageR)
+import(MASS)
+import(Hmisc)
+## other CRAN packages:
+
+
