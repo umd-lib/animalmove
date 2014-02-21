@@ -1,5 +1,4 @@
 setClass("Individuals",
-    #slots = c( specie.type = "character"),
     representation=representation(group.names="character"),
     contains = "SpatialPointsDataFrame",
     prototype = list(group.names = as.character(NA))
@@ -7,7 +6,8 @@ setClass("Individuals",
 
 setValidity("Individuals",
             function(object){
-               if ((length(object@group.names >1) | (is.na(object@group.names))) {
+                
+               if ((length(object@group.names) >1) | (is.na(object@group.names))) {
                    stop("number of designated columns for population groups should be exactly 1")
                }
                 else

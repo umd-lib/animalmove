@@ -33,12 +33,12 @@ setMethod("populations", "Individuals",
           }
 )
 
-setGeneric("rmi", function(this, percent, unin=c("m", "km"),
+setGeneric("rmi.index", function(this, percent, unin=c("m", "km"),
                            unout=c("ha", "km2", "m2"), id) {
-    standardGeneric("rmi")
+    standardGeneric("rmi.index")
 })
 
-setMethod("rmi", "Individuals",
+setMethod("rmi.index", "Individuals",
           function(this, percent = 95, unin=c("m", "km"),
                    unout=c("ha", "km2", "m2"), id) {
               
