@@ -1,3 +1,15 @@
+"RMIndex" =  function(df) {
+    
+    if (is.data.frame(df)){
+        
+        # include validation of presence of columns
+        
+    }
+    
+    new ("RMIndex",  data = df)
+}
+
+
 compute.RealizedMobilityIndex <- function(xy, percent = 95,
                                           unin=c("m", "km"),
                                           unout=c("ha", "km2", "m2"), id) {
@@ -9,7 +21,7 @@ compute.RealizedMobilityIndex <- function(xy, percent = 95,
     idcolumnName = id
     index_id = grep(idcolumnName, colnames(xy@data))
     
-    if (is.na(index)){
+    if (is.na(index_id)){
         stop("Column Animal Id is missing.")
     }
     
@@ -36,7 +48,7 @@ compute.RealizedMobilityIndex <- function(xy, percent = 95,
        
     tmp5 <- sqldf("select tmp4.id, tmp4.type, tmp4.area as indhomerange, tmp3.area pophomerange, case when tmp3.area > 0 then tmp4.area/tmp3.area else 0 end as rmiindex from tmp4 left outer join tmp3 on tmp4.type=tmp3.id")
   
-    colnames(tmp5) <- c("id", "type", "ind.home.range", "pop.home.range", "rmi.index")
+    colnames(tmp5) <- c("id", "pop.type", "ind.home.range", "pop.home.range", "rmi.index")
    
     result <- tmp5
    
@@ -47,16 +59,26 @@ compute.RealizedMobilityIndex <- function(xy, percent = 95,
 }
 
 
-.divide <- function(x,y) {
-    result <- 0
-    
-    options( warn = -1 )
-    if (y!=0){
-        result <- x/y
-    }
-    
-    return (result)
-    
+dim.RMIndex = function(x) dim(x@data)
+
+as.data.frame.RMIndex = function(x, ...) {
+        data.frame(x@data)
 }
+
+setAs("RMIndex", "data.frame", function(from)
+    as.data.frame.RMIndex(from))
+
+setMethod("plot", signature(x = "RMIndex", y = "missing"),
+          function(x, y, ...) plot.RMIndex(x, ...))
+
+
+setMethod('summary', "RMIndex",
+          function(object, ...) {
+              tapply(as.data.frame(object)$rmi.index, rmiData$pop.type, summary)
+          }          
+)
+
+#tapply(rmiData$rmi.index, rmiData$pop.type, summary)
+
 
 
