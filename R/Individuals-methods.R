@@ -32,3 +32,20 @@ setMethod("populations", "Individuals",
               unique(this@data[this@group.names])
           }
 )
+
+setGeneric("rmi", function(this, percent, unin=c("m", "km"),
+                           unout=c("ha", "km2", "m2"), id) {
+    standardGeneric("rmi")
+})
+
+setMethod("rmi", "Individuals",
+          function(this, percent = 95, unin=c("m", "km"),
+                   unout=c("ha", "km2", "m2"), id) {
+              
+              unin <- match.arg(unin)
+              unout <- match.arg(unout)
+              compute.RealizedMobilityIndex(this, percent,
+                                             unin = unin,
+                                             unout = unout, id)
+          }
+)
