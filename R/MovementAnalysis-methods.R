@@ -46,8 +46,8 @@ mcp.area.population <- function(xy, percent = seq(20,100, by=5),
 
 
 mcp.population <- function(xy, percent = 95,
-                                unin,
-                                unout){
+                           unin=c("m", "km"),
+                           unout=c("ha", "km2", "m2")){
     unin <- match.arg(unin)
     unout <- match.arg(unout)
     
