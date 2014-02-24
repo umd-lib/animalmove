@@ -1,4 +1,6 @@
-useDynLib(animalmove,.registration=TRUE)
+useDynLib(animalmove)
+
+exportPattern("^[^\\.]")
 
 ## base packages
 import(methods)
@@ -17,3 +19,6 @@ import(Hmisc)
 ## other CRAN packages:
 
 
+exportClasses(Individuals,RMIndex)
+
+exportMethods(group.by, populations, summary.rmi, rmi.index)

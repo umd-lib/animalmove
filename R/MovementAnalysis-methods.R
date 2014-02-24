@@ -19,7 +19,7 @@ mcp.area.population <- function(xy, percent = seq(20,100, by=5),
     unout <- match.arg(unout)
   
     if ((inherits(xy, "Individuals"))){
-        if ((length(group.names(xy))!=1) | is.na(group.names(xy))) {
+        if ((length(group.by(xy))!=1) | is.na(group.by(xy))) {
             warning("xy should contain only one column (the population group of the animals), population ignored")
             id <- factor(rep("a", nrow(as.data.frame(xy))))
         } else {
@@ -42,6 +42,8 @@ mcp.area.population <- function(xy, percent = seq(20,100, by=5),
                unin=unin,
                unout=unout, plotit)
     
+    return(res)
+    
 }
 
 
@@ -52,7 +54,7 @@ mcp.population <- function(xy, percent = 95,
     unout <- match.arg(unout)
     
     if ((inherits(xy, "Individuals"))){
-        if ((length(group.names(xy))!=1) | is.na(group.names(xy))) {
+        if ((length(group.by(xy))!=1) | is.na(group.by(xy))) {
             warning("xy should contain only one column (the population group of the animals), population ignored")
             id <- factor(rep("a", nrow(as.data.frame(xy))))
         } else {
@@ -74,5 +76,7 @@ mcp.population <- function(xy, percent = 95,
     res <- mcp(xy[,id], percent = percent,
                     unin=unin,
                     unout=unout)
+    
+    return(res)
     
 }

@@ -1,4 +1,4 @@
-"Individuals" =  function(spdf, group.names = as.character(NA),... ) {
+"Individuals" =  function(spdf, group.by = as.character(NA),... ) {
     
     if (is(spdf, "SpatialPointsDataFrame")){
         coords = spdf@coords
@@ -10,16 +10,16 @@
 
     new ("Individuals", SpatialPointsDataFrame(coords = coords, data = data, coords.nrs = coords.nrs, 
                                                                        proj4string = proj4string, match.ID = TRUE,
-                                                                                  bbox = bbox), group.names = group.names, ...)
+                                                                                  bbox = bbox), group.by = group.by, ...)
 }
 
-setGeneric("group.names", function(this) {
-    standardGeneric("group.names")
+setGeneric("group.by", function(this) {
+    standardGeneric("group.by")
 })
 
-setMethod("group.names", "Individuals",
+setMethod("group.by", "Individuals",
           function(this) {
-              this@group.names
+              this@group.by
           }
 )
 
@@ -29,7 +29,7 @@ setGeneric("populations", function(this) {
 
 setMethod("populations", "Individuals",
           function(this) {
-              unique(this@data[this@group.names])
+              unique(this@data[this@group.by])
           }
 )
 

@@ -9,7 +9,6 @@
     new ("RMIndex",  data = df)
 }
 
-
 compute.RealizedMobilityIndex <- function(xy, percent = 95,
                                           unin=c("m", "km"),
                                           unout=c("ha", "km2", "m2"), id) {
@@ -59,26 +58,21 @@ compute.RealizedMobilityIndex <- function(xy, percent = 95,
 }
 
 
-dim.RMIndex = function(x) dim(x@data)
+setGeneric("summary.rmi", function(object, ...) {
+    standardGeneric("summary.rmi")
+})
 
-as.data.frame.RMIndex = function(x, ...) {
-        data.frame(x@data)
-}
-
-setAs("RMIndex", "data.frame", function(from)
-    as.data.frame.RMIndex(from))
-
-setMethod("plot", signature(x = "RMIndex", y = "missing"),
-          function(x, y, ...) plot.RMIndex(x, ...))
-
-
-setMethod('summary', "RMIndex",
+setMethod("summary.rmi", "RMIndex",
           function(object, ...) {
-              tapply(as.data.frame(object)$rmi.index, rmiData$pop.type, summary)
+              df = as.data.frame(object@data)
+              tapply(df$rmi.index, df$pop.type, summary)
           }          
 )
 
-#tapply(rmiData$rmi.index, rmiData$pop.type, summary)
 
-
-
+setMethod("summary.rmi", "data.frame",
+          function(object, ...) {
+              df = as.data.frame(object)
+              tapply(df$rmi.index, df$pop.type, summary)
+          }          
+)
