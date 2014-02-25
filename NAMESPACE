@@ -24,9 +24,9 @@ import(RColorBrewer)
 
 exportClasses(Individuals,RMIndex)
 
-exportMethods(group.by, populations, summary.rmi, rmi.index, plot)
+exportMethods(group.by, populations, summary.rmi, rmi.index, plot, abs.std.mean)
 
-export(plot)
+export(plot, abs.std.mean)
 
 #S3 Methods
 S3method(plot, RMIndex)

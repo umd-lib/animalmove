@@ -10,7 +10,12 @@ abs.std.mean <- function(x, ... ){
     abs.mean <- abs.dist.mean[,2, with = FALSE]
     sum.abs.vector.mean <- sum.abs.vector.mean[1]/len
     abs.std.mean <- sum.abs.vector.mean/abs.mean
-    
+      
     return (abs.std.mean)
     
 }
+
+#gg <- data.table(xx$x)[,vector.mean:=sum(abs(x - mean(x)))]
+
+gg <- abs.std.mean(x)
+gg
