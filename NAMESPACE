@@ -16,9 +16,17 @@ import(lme4)
 import(languageR)
 import(MASS)
 import(Hmisc)
+import(sqldf)
+import(data.table)
+import(RColorBrewer)
 ## other CRAN packages:
 
 
 exportClasses(Individuals,RMIndex)
 
-exportMethods(group.by, populations, summary.rmi, rmi.index)
+exportMethods(group.by, populations, summary.rmi, rmi.index, plot)
+
+export(plot)
+
+#S3 Methods
+S3method(plot, RMIndex)

@@ -76,3 +76,53 @@ setMethod("summary.rmi", "data.frame",
               tapply(df$rmi.index, df$pop.type, summary)
           }          
 )
+
+plot.RMIndex <- function(x,y, ...){
+    
+     
+    if (!inherits(x, "RMIndex")){
+        stop("Object should be type of RMIndex")    
+    }
+    
+    df <- as.data.frame(x@data)
+    
+    dt <- as.data.table(df)
+    dt[,tmp.rank:=max(rmi.index),by=pop.type]
+    dt[,pop.rank:=rank(-tmp.rank)]
+    
+    df <- as.data.frame(dt)
+    df <- within(df,pop.type <- factor(pop.type, levels=names(sort(table(pop.type), decreasing = TRUE))))
+    df$pop.type <- reorder(df$pop.type, df$pop.rank)
+    
+    # strip chart again
+    stripchart(rmi.index ~ factor(pop.type)
+               , data = df, col = NA,xlim = c(.8,5), 
+               cex = cexValue+2,cex.lab = cexValue,cex.axis= cexValue, frame = F,
+               vertical = T,ylab = "Realized mobility index", xlab = "Species",
+               ylim = c(0,0.8))
+    
+    this.x <- jitter(as.integer(factor(as.integer(factor(df$pop.type)))),.3)
+    this.y <- df$rmi.index
+    
+    index <- as.integer(factor(as.integer(factor(df$pop.type))))
+                        
+    fg.pal <- color.palette(length(unique(df$pop.type)))
+    bg.pal <- color.palette(length(unique(df$pop.type)), palette = c("Dark2"))  
+    
+    df$color <- fg.pal[index]
+    df$bgcolor <- bg.pal[index]
+
+    cexValue = 2
+    
+    points(this.x, this.y ,col= df$color, bg =  df$bgcolor,
+           pch = 25,cex = cexValue+2,lwd = 2)
+    
+    
+}
+
+setMethod("plot", signature(x="RMIndex", y="missing"),
+          function(x,y, ...){
+              
+              plot.RMIndex(x, ...)
+          }
+          )
