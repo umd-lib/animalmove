@@ -49,3 +49,10 @@ setMethod("rmi.index", "Individuals",
                                              unout = unout, id)
           }
 )
+
+as.data.frame.IndividualsDataFrame = function(x, ...)  {
+     as.data.frame(x)
+}
+
+setAs("Individuals", "data.frame", function(from)
+    as.data.frame.IndividualsDataFrame(from))

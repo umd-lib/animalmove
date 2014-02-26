@@ -139,7 +139,7 @@ stripchart(rmi.index ~ factor(pop.type)
 x <- jitter(as.integer(factor(as.integer(factor(df$pop.type)))),.3)
 y <- df$rmi.index
 
-index <- as.integer(factor(as.integer(factor(df$pop.type)))
+index <- as.integer(factor(as.integer(factor(df$pop.type))))
 
 
 fg.pal <- color.palette(length(unique(df$pop.type)))

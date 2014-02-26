@@ -24,7 +24,7 @@ import(RColorBrewer)
 
 exportClasses(Individuals,RMIndex)
 
-exportMethods(group.by, populations, summary.rmi, rmi.index, plot, abs.std.mean)
+exportMethods(group.by, populations, summary.rmi, rmi.index, plot, abs.std.mean, mci.index)
 
 export(plot, abs.std.mean)
 

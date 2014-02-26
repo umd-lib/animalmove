@@ -9,7 +9,3 @@ color.palette <- function(colourCount = 3, palette = c("Pastel2")){
     
 }
 
-.color.vector <- function(f) {
-    
-    
-}
