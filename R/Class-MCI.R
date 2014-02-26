@@ -58,3 +58,15 @@ as.data.frame.MCIndex = function(x, ...)  {
 
 setAs("MCIndex", "data.frame", function(from)
     as.data.frame.MCIndex(from))
+
+setGeneric("aov.mci", function(object, ...) {
+    standardGeneric("aov.mci")
+})
+
+setMethod("aov.mci", "MCIndex",
+          function(object, ...) {
+              species <- object@data$pop.type
+              model <- aov(object@data$mci.index ~ species)
+              summary(model)
+          }          
+)

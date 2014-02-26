@@ -77,4 +77,8 @@ res.ind <- .mci.spatial.index.InduvidualsDataFrame(pop.data,  time.lag = c("time
 # display data
 head(res.ind)
 
-MCIndex(res.ind)
+# Create MCIndex object
+mci.object <- MCIndex(res.ind)
+
+# Compute ANOVA stats
+aov.mci(mci.object)
