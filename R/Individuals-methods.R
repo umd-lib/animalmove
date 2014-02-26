@@ -51,7 +51,20 @@ setMethod("rmi.index", "Individuals",
 )
 
 as.data.frame.IndividualsDataFrame = function(x, ...)  {
-     as.data.frame(x)
+    if (length(x@coords.nrs) > 0) {
+        maxi = max(x@coords.nrs, (ncol(x@data) + ncol(x@coords)))
+        ret = list()
+        for (i in 1:ncol(x@coords))
+            ret[[x@coords.nrs[i]]] = x@coords[,i]
+        names(ret)[x@coords.nrs] = dimnames(x@coords)[[2]]
+        idx.new = (1:maxi)[-(x@coords.nrs)]
+        for (i in 1:ncol(x@data))
+            ret[[idx.new[i]]] = x@data[,i]
+        names(ret)[idx.new] = names(x@data)
+        ret = ret[unlist(lapply(ret, function(x) !is.null(x)))]
+        data.frame(ret)
+    } else
+        data.frame(x@data, x@coords)
 }
 
 setAs("Individuals", "data.frame", function(from)

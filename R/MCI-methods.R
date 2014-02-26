@@ -27,15 +27,13 @@ setMethod("mci.index", signature(object = c("SpatialPointsDataFrame")),
 )
 
 setMethod("mci.index", signature(object = "Individuals"),
-          function(object, group.by, time.lag, ...) {
+          function(object, time.lag, ...) {
               
-              .mci.spatial.index.InduvidualsDataFrame (object, group.by, time.lag, ... )
+              .mci.spatial.index.InduvidualsDataFrame (object, time.lag, ... )
           }          
 )
 
 .mci.spatial.index.SpatialPointsDataFrame <- function(xy, group.by, time.lag){
-    
-    ## Verifications
     
     ## Verifications
     if (!inherits(xy, "SpatialPoints"))
@@ -50,20 +48,20 @@ setMethod("mci.index", signature(object = "Individuals"),
     group.by <- group.by
     time.lag <- time.lag
     
-    if (is.na(group.by) | length(group.by) == 0) {
-        stop("Invalid column for the population type")
-    }
-    
-    if (is.na(time.lag) | length(time.lag) == 0) {
-        stop("Invalid column for the time lag")
-    }
-    
     index.group.by = grep(group.by, colnames(xy@data))
     colnames(xy@data)[index.group.by] <- "pop.type"
     
     
-    index.time.lag = grep(group.by, colnames(xy@data))
+    index.time.lag = grep(time.lag, colnames(xy@data))
     colnames(xy@data)[index.time.lag] <- "time.lag"
+    
+    if (is.na(group.by) | length(group.by) == 0 | is.na(index.group.by)) {
+        stop("Invalid column mapping for the population type. The data frame should have a column mapped to the population type.")
+    }
+    
+    if (is.na(time.lag) | length(time.lag) == 0 | is.na(index.time.lag)) {
+        stop("Invalid column mapping for the time lag. The data frame should have a column mapped to the time lag.")
+    }
     
     # save data frame
     df <- as.data.frame(xy)
@@ -80,7 +78,7 @@ setMethod("mci.index", signature(object = "Individuals"),
     return (df)
 }
 
-.mci.spatial.index.InduvidualsDataFrame <- function(xy, group.by, time.lag){
+.mci.spatial.index.InduvidualsDataFrame <- function(xy, time.lag){
     
     ## Verifications
     if (!inherits(xy, "SpatialPoints"))
@@ -92,24 +90,26 @@ setMethod("mci.index", signature(object = "Individuals"),
     if (ncol(coordinates(xy))>2)
         stop("xy should be defined in two dimensions")
     
-    group.by <- group.by
-    time.lag <- time.lag
-    
-    if (is.na(time.lag) | length(time.lag) == 0) {
-        stop("Invalid column for the time lag")
-    }
-    
+    group.by = colnames(populations(pop.data))
     index.group.by = grep(group.by, colnames(xy@data))
     colnames(xy@data)[index.group.by] <- "pop.type"
     
-    index.time.lag = grep(group.by, colnames(xy@data))
+    index.time.lag = grep(time.lag, colnames(xy@data))
     colnames(xy@data)[index.time.lag] <- "time.lag"
+    
+    if (is.na(group.by) | length(group.by) == 0 | is.na(index.group.by)) {
+        stop("Invalid column mapping for the population type. The data frame should have a column mapped to the population type.")
+    }
+    
+    if (is.na(time.lag) | length(time.lag) == 0 | is.na(index.time.lag)) {
+        stop("Invalid column mapping for the time lag. The data frame should have a column mapped to the time lag.")
+    }
+    
     
     # save data frame
     df <- as.data.frame(xy)
     
     dt <- data.table(df)
-    head(dt)
     dt[, abs.distX:= abs.std.mean(X), by= list(pop.type,time.lag)]
     dt[, abs.distY:= abs.std.mean(Y), by= list(pop.type,time.lag)]
     dt[, mci.index:= (1.0 - ((abs.distX + abs.distY)/2)), by= list(pop.type,time.lag)]
