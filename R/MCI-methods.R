@@ -22,14 +22,17 @@ setGeneric("mci.index", function(object, group.by="missing", time.lag, ...) {
 setMethod("mci.index", signature(object = c("SpatialPointsDataFrame")),
           function(object, group.by, time.lag, ...) {
               
-              .mci.spatial.index.SpatialPointsDataFrame (object, group.by, time.lag, ... )
-      }          
+              mci.index <- .mci.spatial.index.SpatialPointsDataFrame (object, group.by, time.lag, ... )
+              
+       }          
 )
 
 setMethod("mci.index", signature(object = "Individuals"),
           function(object, time.lag, ...) {
               
-              .mci.spatial.index.InduvidualsDataFrame (object, time.lag, ... )
+              mci.index <- .mci.spatial.index.InduvidualsDataFrame (object, time.lag, ... )
+              
+              return (mci.index)
           }          
 )
 
@@ -50,8 +53,7 @@ setMethod("mci.index", signature(object = "Individuals"),
     
     index.group.by = grep(group.by, colnames(xy@data))
     colnames(xy@data)[index.group.by] <- "pop.type"
-    
-    
+        
     index.time.lag = grep(time.lag, colnames(xy@data))
     colnames(xy@data)[index.time.lag] <- "time.lag"
     

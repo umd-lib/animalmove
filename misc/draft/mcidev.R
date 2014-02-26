@@ -76,3 +76,5 @@ head(res.ind)
 res.ind <- .mci.spatial.index.InduvidualsDataFrame(pop.data,  time.lag = c("time.lag"))
 # display data
 head(res.ind)
+
+MCIndex(res.ind)
