@@ -1,24 +1,31 @@
-abs.std.mean <- function(x, ... ){
-    
-    # x should be a numerical vector
-    # add check for that
-    
-    len <- length(x)
-    x <- data.table(x)
-    abs.dist.mean <- x[,list (vector.mean=sum(abs(x - mean(x))), mean = mean(x))]
-    sum.abs.vector.mean <- abs.dist.mean[,1, with = FALSE]
-    abs.mean <- abs.dist.mean[,2, with = FALSE]
-    sum.abs.vector.mean <- sum.abs.vector.mean[1]/len
-    abs.std.mean <- sum.abs.vector.mean/abs.mean
-      
-    return (abs.std.mean)
-    
-}
 
-#gg <- data.table(xx$x)[,vector.mean:=sum(abs(x - mean(x)))]
+require(sqldf)
+require(adehabitatHR)
+require(sp)
+require(data.table)
+require(RColorBrewer)
 
-gg <- abs.std.mean(x)
-gg
+library(adehabitatHR)
+library(sp)
+library(sqldf)
+library(data.table)
+library(RColorBrewer)
+
+source('/apps/git/animalmove/R/Class-Individuals.R', echo=TRUE)
+source('/apps/git/animalmove/R/Individuals-methods.R', echo=TRUE)
+source('/apps/git/animalmove/R/MovementAnalysis-methods.R', echo=TRUE)
+source('/apps/git/animalmove/R/RMI-methods.R', echo=TRUE)
+source('/apps/git/animalmove/R/Class-RMI.R', echo=TRUE)
+source('/apps/git/animalmove/R/MCI-methods.R', echo=TRUE)
+
+
+# compute absolute distance
+
+x <- as.numeric(c(1,2, 3, 4 ))
+abs.dist <- abs.std.mean(x)
+
+# display abs.dist
+abs.dist
 
 sampleds <- puechabonsp
 reloc <- sampleds$relocs
@@ -56,6 +63,6 @@ group.by = colnames(populations(pop.data))
 index.group.by = grep(group.by, colnames(pop.data@data))
 
 # call using generic method
-mci.index(pop.data, group.by = c("type"), time.lag = c("time.lag"))
+#mci.index(pop.data, group.by = c("type"), time.lag = c("time.lag"))
 
-.mci.spatial.index.InduvidualsDataFrame(pop.data, group.by = c("type"), time.lag = c("time.lag"))
+#.mci.spatial.index.InduvidualsDataFrame(pop.data, group.by = c("type"), time.lag = c("time.lag"))

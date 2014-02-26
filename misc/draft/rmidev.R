@@ -2,11 +2,15 @@ install.packages("sqldf")
 require(sqldf)
 require(adehabitatHR)
 require(sp)
+require(data.table)
+require(RColorBrewer)
 
 library(adehabitatHR)
 library(sp)
 library(sqldf)
 library(data.table)
+library(RColorBrewer)
+
 data(puechabonsp)
 
 source('/apps/git/animalmove/R/Class-Individuals.R', echo=TRUE)
