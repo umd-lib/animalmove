@@ -122,3 +122,81 @@ setMethod("mci.index", signature(object = "Individuals"),
     
     return (df)
 }
+
+
+setMethod("aov", signature(formula = "MCIndex", data = "missing", projections = "missing", qr="missing", contrasts = "missing"),
+          function(formula, data, projections, qr, contrasts, print = FALSE, ...){
+              
+              print <- print
+              object <- formula
+              species <- object@data$pop.type
+              model <- aov(object@data$mci.index ~ species)
+              
+              if (print) {
+                summary(model)
+               }
+              
+              return (model)
+              
+          }
+)
+
+setMethod("TukeyHSD", signature(x = "MCIndex", which = "missing"),
+          function(x, which, ...){
+                            
+              model <- aov(x)
+              result <- TukeyHSD(model)
+                                         
+              return (result)
+              
+          }
+)
+
+
+setMethod("kruskal.test", signature(x = "MCIndex"),
+          function(x, ...){
+              
+              object <- x
+              species <- as.factor(object@data$pop.type)
+              df <- object@data
+              kruskal.model <- kruskal.test(df$mci.index ~ species)
+              
+              result <- kruskal.model
+              
+              return (result)
+              
+          }
+)
+
+setMethod("kruskalmc", signature(resp = "MCIndex"),
+          function(resp, ...){
+              
+              object <- resp
+              species <- as.factor(object@data$pop.type)
+              df <- object@data
+              kruskal.model <- kruskalmc(df$mci.index , species)
+              
+              result <- kruskal.model
+              
+              return (result)
+              
+          }
+)
+
+summary.MCIndex <- function(object){
+    
+    if (!inherits(object, "MCIndex")){
+        stop("Invalid object type. Expected MCIndex.")
+    }
+    
+    print(summary(aov(object)))
+    
+    print(TukeyHSD(object))
+    
+    print(kruskal.test(object))
+    
+    print(kruskalmc(object))
+    
+}
+
+

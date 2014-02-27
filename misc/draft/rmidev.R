@@ -19,10 +19,6 @@ source('/apps/git/animalmove/R/MovementAnalysis-methods.R', echo=TRUE)
 source('/apps/git/animalmove/R/RMI-methods.R', echo=TRUE)
 source('/apps/git/animalmove/R/Class-RMI.R', echo=TRUE)
 
-.populationType <- function(x1){
-    type <- subset(x1, id == id, select = c("type"))[1,1]
-    return(type)
-}
 
 sampleds <- puechabonsp
 reloc <- sampleds$relocs

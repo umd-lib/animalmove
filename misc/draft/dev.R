@@ -63,3 +63,15 @@ df = data.frame(z1 = round(5 + rnorm(10), 2), z2 = 20:29)
 lt.spdf <- SpatialPointsDataFrame(lt.sp, df)
 lt.ind <- Individuals(lt.spdf, group.names = c("good"))
 
+setGeneric("aov.mci", function(object, ...) {
+    standardGeneric("aov.mci")
+})
+
+setMethod("aov.mci", "MCIndex",
+          function(object, ...) {
+              species <- object@data$pop.type
+              model <- aov(object@data$mci.index ~ species)
+              summary(model)
+          }          
+)
+

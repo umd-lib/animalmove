@@ -4,6 +4,7 @@ require(adehabitatHR)
 require(sp)
 require(data.table)
 require(RColorBrewer)
+require(pgirmess)
 
 library(adehabitatHR)
 library(sp)
@@ -18,6 +19,7 @@ source('/apps/git/animalmove/R/RMI-methods.R', echo=TRUE)
 source('/apps/git/animalmove/R/Class-RMI.R', echo=TRUE)
 source('/apps/git/animalmove/R/MCI-methods.R', echo=TRUE)
 
+data(puechabonsp)
 
 # compute absolute distance
 
@@ -81,4 +83,18 @@ head(res.ind)
 mci.object <- MCIndex(res.ind)
 
 # Compute ANOVA stats
-aov.mci(mci.object)
+anova.model <- aov(mci.object, TRUE)
+
+# display anova
+anova.model
+
+# TukeyHSD from model
+TukeyHSD(anova.model)
+
+TukeyHSD(mci.object)
+
+kruskal.test(mci.object)
+
+kruskalmc(mci.object)
+
+summary.MCIndex(mci.object)

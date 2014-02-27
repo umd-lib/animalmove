@@ -22,11 +22,14 @@ import(RColorBrewer)
 ## other CRAN packages:
 
 
-exportClasses(Individuals,RMIndex)
+exportClasses(Individuals,RMIndex,MCIndex)
 
-exportMethods(group.by, populations, summary.rmi, rmi.index, plot, abs.std.mean, mci.index, aov.mci)
+exportMethods(group.by, populations, summary.rmi, rmi.index, plot, abs.std.mean, mci.index, aov, TukeyHSD, kruskal.test, kruskalmc)
 
-export(plot, abs.std.mean, aov.mci)
+export(plot, abs.std.mean)
 
 #S3 Methods
 S3method(plot, RMIndex)
+S3method(summary,MCIndex) 
+#S3method(aov,MCIndex)
+#S3method(TukeyHSD,MCIndex)

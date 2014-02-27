@@ -27,46 +27,14 @@ setValidity("MCIndex",
     new ("MCIndex",  data = this.data)
 }
 
-# ==========================================================================
-# MCIndex Class Validator
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-setMethod("initialize",
-          signature(.Object="MCIndex"),
-          function(.Object,
-                   data, ...
-                   ) {
-              
-             this.data <- data
-             # has.time.lag = grepl("time.lag", names(this.data))
-             # has.pop.type = grepl("pop.type", names(this.data))
-             # has.mci.index = grepl("mci.index", names(this.data))
-              
-             # if (has.time.lag & has.pop.type & has.mci.index){
-                  .Object@data <- this.data
-                  callNextMethod(.Object, ...)
-              #  }
-             # else{
-              #    stop("Invalid data frame. MCIndex cannot be created. The data frame should have time.lag, population type, and mci.index columns.")
-             # }
-            
-             })
+
+#as.data.frame.MCIndex = function(x, ...)  {
+ #   data.frame(x@data)
+#}
+
+#setAs("MCIndex", "data.frame", function(from)
+ #   as.data.frame.MCIndex(from))
 
 
-as.data.frame.MCIndex = function(x, ...)  {
-        data.frame(x@data)
-}
 
-setAs("MCIndex", "data.frame", function(from)
-    as.data.frame.MCIndex(from))
 
-setGeneric("aov.mci", function(object, ...) {
-    standardGeneric("aov.mci")
-})
-
-setMethod("aov.mci", "MCIndex",
-          function(object, ...) {
-              species <- object@data$pop.type
-              model <- aov(object@data$mci.index ~ species)
-              summary(model)
-          }          
-)
