@@ -143,10 +143,10 @@ setMethod("aov", signature(formula = "MCIndex", data = "missing", projections = 
 
 setMethod("TukeyHSD", signature(x = "MCIndex", which = "missing"),
           function(x, which, ...){
-                            
+              
               model <- aov(x)
               result <- TukeyHSD(model)
-                                         
+              
               return (result)
               
           }
@@ -199,4 +199,62 @@ summary.MCIndex <- function(object){
     
 }
 
+.plot.MCIndex <- function(x, ..., range = 1.5, width = NULL, varwidth = FALSE,
+                          notch = FALSE, outline = TRUE, names, plot = TRUE,
+                          border = NULL, col = NULL, log = "",
+                          pars = list(boxwex = 0.8, staplewex = 0.5, outwex = 0.5),
+                          horizontal = FALSE, add = FALSE, at = NULL, cexValue = 2) {
+    
 
+    if (!inherits(x, "MCIndex")){
+        stop("Object should be type of MCIndex")    
+    }
+    
+    col <- col
+    border <- border
+    cexValue <- cexValue
+        
+    df <- as.data.frame(x@data)
+    
+    dt <- as.data.table(df)
+    dt[,tmp.rank:=max(mci.index),by=pop.type]
+    dt[,pop.rank:=rank(tmp.rank)][order(pop.rank)]
+    
+    df <- as.data.frame(dt)
+    df <- within(df,pop.type <- factor(pop.type))
+    df$pop.type <- reorder(df$pop.type, -df$pop.rank)
+    
+    par(mar = c(5, 5, 2, 1))
+    
+    index <- as.integer(factor(as.integer(factor(df$pop.type))))
+    
+    if (is.null(col)){
+        fg.pal <- color.palette(length(unique(df$pop.type)))
+        df$color <- fg.pal[index]
+        col <- df$color
+     }
+
+    if (is.null(border)){
+        bg.pal <- color.palette(length(unique(df$pop.type)), palette = c("Dark2"))  
+        df$bgcolor <- bg.pal[index]
+        border <- df$bgcolor
+    }
+    
+    boxplot(mci.index ~ pop.type, data = df, 
+            col= col, 
+            border = border,
+            outline = F, lwd=2, boxwex = .5, cex = cexValue, cex.lab = cexValue,
+            cex.axis= cexValue,   frame = F, ylab = "Movement coordination index", xlab = NULL)
+    
+    #Add baseline 
+    lines(c(.7,3.3), c(0,0), lwd = 2, lty = 1, col = 1) 
+    
+}
+
+
+
+setMethod("plot", signature(x="MCIndex", y="missing"),
+         function(x,y, ...){
+               .plot.MCIndex(x, ...)
+          }
+)

@@ -98,3 +98,31 @@ kruskal.test(mci.object)
 kruskalmc(mci.object)
 
 summary.MCIndex(mci.object)
+
+# test plot MCI
+
+df <- as.data.frame(mci.object@data)
+
+dt <- as.data.table(df)
+dt[,tmp.rank:=max(mci.index),by=pop.type]
+dt[,pop.rank:=rank(tmp.rank)][order(pop.rank)]
+
+df <- as.data.frame(dt)
+df <- within(df,pop.type <- factor(pop.type, levels=names(sort(table(pop.type), decreasing = TRUE))))
+df$pop.type <- reorder(df$pop.type, -df$pop.rank)
+
+par(mar = c(5, 5, 2, 1))
+cexValue = 2
+
+fg.pal <- color.palette(length(unique(df$pop.type)))
+bg.pal <- color.palette(length(unique(df$pop.type)), palette = c("Dark2"))  
+
+df$color <- fg.pal[index]
+df$bgcolor <- bg.pal[index]
+
+boxplot(mci.index~factor(pop.type), data = df, 
+        col= df$color, 
+        border = df$bgcolor,
+        outline = F, lwd=2, boxwex = .5, cex = cexValue, cex.lab = cexValue,
+        cex.axis= cexValue,   frame = F, ylab = "Movement coordination index", xlab = NULL)
+
