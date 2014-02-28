@@ -26,6 +26,8 @@ par(mfrow=c(2,2))
 
 # Compute Spatial Polygon for Caribou
 
+color = c("green")
+
 x <- caribou$xAlaskaAlb*1000
 y <- caribou$yAlaskaAlb*1000
 
@@ -39,12 +41,12 @@ df <- data.frame(pop.type = rep("caribou",nrow(caribou)))
 xy.caribou.spdf = SpatialPointsDataFrame(xy.sp, df)
 
 caribou.poly <- mcp(xy.caribou.spdf, percent = 100)
-#caribou.poly
+caribou.poly
 
-plot(caribou.poly)
-
-caribou.area <- mcp.area(xy.caribou.spdf, percent = 100, plotit = F)
+plot(caribou.poly, col = color)
+caribou.area <- mcp.area(xy.caribou.spdf, percent = 100, plotit = FALSE)
 caribou.area
+
 
 # Compute Spatial Polygon for Gazelle
 
@@ -61,9 +63,9 @@ df <- data.frame(pop.type = rep("gazelle",nrow(gazelle)))
 xy.gazelle.spdf = SpatialPointsDataFrame(xy.sp, df)
 
 gazelle.poly <- mcp(xy.gazelle.spdf, percent = 100)
-#gazelle.poly
+gazelle.poly
 
-plot(gazelle.poly)
+plot(gazelle.poly, col = color)
 
 gazelle.area <- mcp.area(xy.gazelle.spdf, percent = 100, plotit = F)
 gazelle.area
@@ -85,7 +87,7 @@ xy.guanaco.spdf = SpatialPointsDataFrame(xy.sp, df)
 guanaco.poly <- mcp(xy.guanaco.spdf, percent = 100)
 #guanaco.poly
 
-plot(guanaco.poly)
+plot(guanaco.poly, col = color)
 
 guanaco.area <- mcp.area(xy.guanaco.spdf, percent = 100, plotit = F)
 guanaco.area
@@ -104,10 +106,10 @@ df <- data.frame(pop.type = rep("moose",nrow(moose)))
 
 xy.moose.spdf = SpatialPointsDataFrame(xy.sp, df)
 
-moose.poly <- mcp(xy.guanaco.spdf, percent = 100)
+moose.poly <- mcp(xy.moose.spdf, percent = 100)
 #moose.poly
 
-plot(moose.poly)
+plot(moose.poly, col = color)
 
 moose.area <- mcp.area(xy.moose.spdf, percent = 100, plotit = F)
 moose.area
