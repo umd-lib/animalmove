@@ -1,4 +1,4 @@
-"Individuals" =  function(spdf, group.by = as.character(NA),... ) {
+"Individuals" =  function(spdf, group.by,... ) {
     
     if (is(spdf, "SpatialPointsDataFrame")){
         coords = spdf@coords
@@ -33,7 +33,7 @@ setMethod("populations", "Individuals",
           }
 )
 
-setGeneric("rmi.index", function(this, percent, unin=c("m", "km"),
+setGeneric("rmi.index", function(this, percent = 95, unin=c("m", "km"),
                            unout=c("ha", "km2", "m2"), id) {
     standardGeneric("rmi.index")
 })

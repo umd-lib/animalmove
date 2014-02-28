@@ -51,8 +51,7 @@ loadandinstall("Hmisc")
 
 ###################################################
 # Step 1: Set the working directory 
-setwd("/apps/animalmv/data")
-setwd("/apps/animalmv/data")
+setwd("/apps/git/animalmove/misc/originaldata")
 list.files() #look at the files in your current directory
 
 ###################################################

@@ -1,4 +1,4 @@
-mcp.area.population <- function(xy, percent = seq(20,100, by=5),
+mcp.area.population <- function(xy, percent = 95,
                                 unin=c("m", "km"),
                                 unout=c("ha", "km2", "m2"), plotit = TRUE){
     
