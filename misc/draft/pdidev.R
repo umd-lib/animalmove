@@ -1,15 +1,16 @@
-
 require(adehabitatHR)
 require(sp)
 require(data.table)
 require(RColorBrewer)
 require(pgirmess)
+require(splancs)
 
 library(adehabitatHR)
 library(sp)
 library(sqldf)
 library(data.table)
 library(RColorBrewer)
+library(splancs)
 
 source('/apps/git/animalmove/R/Class-Individuals.R', echo=TRUE)
 source('/apps/git/animalmove/R/Individuals-methods.R', echo=TRUE)
@@ -21,8 +22,7 @@ moose<-read.csv("/apps/git/animalmove/misc/originaldata/16_day_5_individuals_dat
 guanaco<-read.csv("/apps/git/animalmove/misc/originaldata/16_day_5_individuals_data_Gaunaco.csv")
 
 head(guanaco)
-
-par(mfrow=c(2,2))
+par(mfrow=c(2,2), oma=c(0,0,2,0))
 
 # Compute Spatial Polygon for Caribou
 
@@ -42,8 +42,11 @@ xy.caribou.spdf = SpatialPointsDataFrame(xy.sp, df)
 
 caribou.poly <- mcp(xy.caribou.spdf, percent = 100)
 caribou.poly
+head(caribou.poly)
 
-plot(caribou.poly, col = color)
+plot(caribou.poly, col = color, axes=TRUE)
+points(xy.caribou.spdf, pch=3)
+title(main="Caribou", xlab="X", ylab="Y")
 caribou.area <- mcp.area(xy.caribou.spdf, percent = 100, plotit = FALSE)
 caribou.area
 
@@ -65,8 +68,9 @@ xy.gazelle.spdf = SpatialPointsDataFrame(xy.sp, df)
 gazelle.poly <- mcp(xy.gazelle.spdf, percent = 100)
 gazelle.poly
 
-plot(gazelle.poly, col = color)
-
+plot(gazelle.poly, col = color, axes=TRUE)
+points(xy.gazelle.spdf, pch=3)
+title(main="Gazelle", xlab="X", ylab="Y")
 gazelle.area <- mcp.area(xy.gazelle.spdf, percent = 100, plotit = F)
 gazelle.area
 
@@ -87,8 +91,9 @@ xy.guanaco.spdf = SpatialPointsDataFrame(xy.sp, df)
 guanaco.poly <- mcp(xy.guanaco.spdf, percent = 100)
 #guanaco.poly
 
-plot(guanaco.poly, col = color)
-
+plot(guanaco.poly, col = color, axes = TRUE)
+points(xy.guanaco.spdf, pch=3)
+title(main="Guanaco", xlab="X", ylab="Y")
 guanaco.area <- mcp.area(xy.guanaco.spdf, percent = 100, plotit = F)
 guanaco.area
 
@@ -109,12 +114,13 @@ xy.moose.spdf = SpatialPointsDataFrame(xy.sp, df)
 moose.poly <- mcp(xy.moose.spdf, percent = 100)
 #moose.poly
 
-plot(moose.poly, col = color)
-
+plot(moose.poly, col = color, axes=TRUE)
+points(xy.moose.spdf, pch=3)
+title(main="Moose", xlab="X", ylab="Y")
 moose.area <- mcp.area(xy.moose.spdf, percent = 100, plotit = F)
 moose.area
-
-# movement scales for diffrent species
+title("Minimum Convex Polygons by Species", outer=TRUE)
+# movement scales for different species
 
 caribou.scale = seq(0,100000,5000) #caribou and gazelles
 moose.scale = seq(0,10000,500) #moose
