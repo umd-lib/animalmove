@@ -31,7 +31,7 @@ dt.caribou.xy
 str(dt.caribou.xy)
 
 #Create Individuals data frame
-xy.sp.caribou <- SpatialPoints(dt.car.xy)
+xy.sp.caribou <- SpatialPoints(dt.caribou.xy)
 xy.sp.caribou
 
 # Create spatial points data frame with attributes
@@ -43,15 +43,101 @@ xy.caribou.spdf.reloc <- Individuals(xy.caribou.spdf, group.by="pop.type")
 
 str(xy.caribou.spdf.reloc)
 
+caribou.scale = seq(0,100000,5000) #caribou and gazelles
+moose.scale = seq(0,10000,500) #moose
+guanaco.scale = seq(0,15000,500) #guanaco
 
-getComplementData < function(x){
-    
-}
 
-#df <- data.table(xy.caribou.spdf.reloc@data)
-#str(df)
 
-#df[, ]
-#df <- data.frame(pop.type = rep("caribou",nrow(caribou)))
+id.vector <- unique(xy.caribou.spdf@data$id)
+id.vector
 
-#xy.caribou.spdf = SpatialPointsDataFrame(xy.sp, df)
+id.vector[1]
+
+expr1 <- "S435891"
+oneId <- subset(xy.caribou.spdf.reloc, xy.caribou.spdf.reloc@data$id == id.vector[1])
+oneId
+
+nrow(oneId)
+
+otherId <- subset(xy.caribou.spdf.reloc, xy.caribou.spdf.reloc@data$id != id.vector[1])
+otherId
+nrow(otherId)
+
+this.sp1 <- SpatialPoints(oneId)
+other.sp2 <- SpatialPoints(otherId)
+
+pc1_1 <- as.matrix(this.sp1@coords)
+pc1_2 <- as.matrix(other.sp2@coords)
+
+caribou.poly.spatial <- SpatialPolygons(caribou.poly@polygons)
+
+caribou.xy<- caribou.poly@polygons[[1]]@Polygons[[1]]@coords
+
+caribou.xy
+
+#k1 <- k12hat(pc1_1, pc1_2, caribouPoly, s) # original coefficients
+#k1
+
+k1_test <- k12hat(pc1_1, pc1_2, caribou.xy, caribou.scale)
+k1_test 
+
+res_k1_test <- caribou.scale - sqrt(k1_test/pi)
+res_k1_test 
+
+#identical(k1_test,k2, FALSE, FALSE, FALSE, FALSE) 
+#identical(k1_test,k2, FALSE, FALSE, FALSE, FALSE) 
+
+# "S435891" "S515876" "S587873" "S597881" "S617880"
+#pC1 = as.points(caribou[as.character(caribou$uniqueID) =="S435891",]$xAlaskaAlb*1000, 
+ #               caribou[as.character(caribou$uniqueID) =="S435891",]$yAlaskaAlb*1000)
+
+#points of all other caribou
+#pC2 = as.points(caribou[as.character(caribou$uniqueID) !="S435891",]$xAlaskaAlb*1000, 
+ #               caribou[as.character(caribou$uniqueID) !="S435891",]$yAlaskaAlb*1000)
+
+#pC1
+#pC2
+
+#k2 = k12hat(pC1,pC2, caribouPoly, s)
+#k2
+
+#res_k2 <- s - sqrt(k2/pi)
+#res_k2
+
+#identical(k1,k2)
+#identical(res_k1_test, res_k2) 
+
+
+#mymatrix <- as.data.frame(cbind(caribou.scale, caribou.scale, caribou.scale, caribou.scale, caribou.scale))
+
+# test PDI-methods starts here 
+
+id.vector <- unique(xy.caribou.spdf.reloc@data$id)
+id.vector
+
+id.vector[1]
+
+this.id <- id.vector[1]
+this.id
+
+data <- getData(this.id, xy.caribou.spdf.reloc)
+data
+nrow(data)
+
+polXY <- as.matrix.extractPolygonPointsXY(caribou.poly)
+polXY
+
+df1 <- getData(id, xy.caribou.spdf.reloc)
+head(df1)
+nrow(df1)
+
+df2<- getComplementData(id, xy.caribou.spdf.reloc)
+head(df2)
+
+k121 <- compute.k12hat(df1, df2, caribou.poly, caribou.scale)
+k121
+
+pdi <- compute.Individual.PDI (id, xy.caribou.spdf.reloc, caribou.poly, caribou.scale)
+pdi
+
