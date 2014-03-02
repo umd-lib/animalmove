@@ -1,9 +1,14 @@
-setClass("PDI",
-         representation=representation(pdi="numeric"),
-         contains = "Individuals",
-)
+setClass("PDIndex",
+         representation=representation(pop.type="character", 
+                                       mean.pdi="numeric",
+                                       max.pdi="numeric", 
+                                       min.pdi = "numeric", 
+                                       se.pdi = "numeric",
+                                       data = "data.frame"
+                                       )
+    )
 
-setValidity("PDI",
+setValidity("PDIndex",
             function(object){
                 
                 return(TRUE)

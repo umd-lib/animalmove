@@ -47,6 +47,10 @@ caribou.scale = seq(0,100000,5000) #caribou and gazelles
 moose.scale = seq(0,10000,500) #moose
 guanaco.scale = seq(0,15000,500) #guanaco
 
+car.population <- mcp.population(xy.caribou.spdf.reloc, percent = 100,
+                                  unin = "m", unout = "km2")
+
+car.population
 
 
 id.vector <- unique(xy.caribou.spdf@data$id)
@@ -140,4 +144,60 @@ k121
 
 pdi <- compute.Individual.PDI (id, xy.caribou.spdf.reloc, caribou.poly, caribou.scale)
 pdi
+
+dt <- data.table(xy.caribou.spdf.reloc@data)
+
+df <- xy.caribou.spdf.reloc@data
+
+f1 <- as.data.frame(id.vector)
+
+newdf <-data.frame(data.frame(row.names=1:21))
+
+x <- as.data.frame(cbind(c(id.vector)))
+x
+
+df3 <- with (f1,cbind(newdf, compute.Individual.PDI (id.vector, xy.caribou.spdf.reloc, caribou.poly, caribou.scale)))
+
+df$id
+
+mf = as.data.frame(cbind(s,s,s,s,s))
+
+mf = mf*0
+count <- 0
+test <- newdf
+
+tmpdf <-data.frame(data.frame(row.names=1:21))
+
+
+for (id in id.vector) {
+    
+    print (id)
+    tmp = as.numeric(compute.Individual.PDI(id, xy.caribou.spdf.reloc, caribou.poly, caribou.scale))
+    tmpdf <- cbind(tmpdf, id = tmp)
+    
+}
+
+tmpdf
+
+maxC1 = apply(tmpdf,1,max) #out of all five caribou, get max value for each row (spatial lag)
+minC1 = apply(tmpdf,1,min) #out of all five caribou, get min value for each row (spatial lag)
+meanC1 = apply(tmpdf,1,mean)    #for all five caribou, get mean for each row (spatial lag])
+seC1 =apply(tmpdf,1,se) #for all five caribou, get standard deviation for each row (spatial lag)	 
+
+maxC1
+maxC
+
+identical(maxC1, maxC)
+
+minC1
+minC
+
+meanC1
+meanC
+
+seC1
+seC
+
+maxC1
+maxC
 

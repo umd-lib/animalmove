@@ -23,7 +23,7 @@ import (RCurl, RUnit, circular, knitr, markdown, ggmap, mapproj)
 
 exportClasses(Individuals,RMIndex,MCIndex)
 
-exportMethods(group.by, populations, summary.rmi, rmi.index, plot, mci.index, aov, TukeyHSD, kruskal.test, kruskalmc)
+exportMethods(group.by, populations, summary.rmi, rmi.index, plot, mci.index, aov, TukeyHSD, kruskal.test, kruskalmc, pdi.index)
 
 export(plot, abs.std.mean)
 

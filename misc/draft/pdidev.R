@@ -41,6 +41,10 @@ df <- data.frame(pop.type = rep("caribou",nrow(caribou)))
 xy.caribou.spdf = SpatialPointsDataFrame(xy.sp, df)
 
 caribou.poly <- mcp(xy.caribou.spdf, percent = 100)
+
+caribou.poly1 <- mcp(xy.caribou.spdf, percent = 100, unin = "m", unout = "km2")
+caribou.poly1
+
 caribou.poly
 head(caribou.poly)
 
