@@ -12,8 +12,7 @@ Title: Analysis of animal population-level movement patterns
 Description: animalmove is a package that contains functions to analyze and
     visualize animal movement dynamic at the population level. It includes
     statistical analysis and comparison of multiple species relocation data.
-Imports: methods, lme4, chron, splancs, adehabitatHR, pgirmess, sciplot, maptools, sp, languageR, MASS, Hmisc, rgdal (>= 0.8-7), sqldf, data.table, RColorBrewer, RCurl, RUnit, circular, knitr, markdown, ggmap, mapproj
-Depends: R (>= 3.0.2)
+Depends: R (>= 3.0.2), methods, lme4, chron, splancs, adehabitatHR, pgirmess, sciplot, maptools, sp, languageR, MASS, Hmisc, rgdal (>= 0.8-7), sqldf, data.table, RColorBrewer, RCurl, RUnit, circular, knitr, markdown,  ggmap, mapproj
 License: License: GPL (>= 3)
 url: http://www.clfs.umd.edu/biology/faganlab/movement/index.html
 LazyData: true
@@ -22,11 +21,10 @@ Suggests:
     RUnit,
     circular,
     knitr,
-    BiocStyle,
     markdown,
     ggmap,
     mapproj   
-Packaged: 2013-10-21 09:46:59 UTC; bart
+Packaged: 2014-02-21 09:46:59 EST; bart
 NeedsCompilation: yes
 Repository: CRAN
 Date/Publication: 2014-02-10
