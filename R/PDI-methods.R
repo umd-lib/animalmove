@@ -1,8 +1,8 @@
 "PDIndex" =  function(pop.type, scale, data) {
     
-    if (!is.data.frame(df)){
+    if (!is.data.frame(data)){
         
-        stop("The first argument should be a data frame.")
+        stop("The third argument should be a data frame.")
         
     }
     else{
@@ -129,11 +129,41 @@ setMethod("pdi.index", signature(object = "Individuals"),
                                                    unin , unout , ... )
               
               pop.type <- as.character(populations(object))
+              pdi.index$pop.type <- pop.type
+              this.scale <- scale
                           
               # Create PDIndex object
-              pdi.index<- PDIndex(pop.type, scale, pdi.index)
+              pdi.index<- PDIndex(pop.type, this.scale, pdi.index)
               
               return (pdi.index)
+          }          
+)
+
+
+setGeneric("summary.pdi", function(object) {
+    standardGeneric("summary.pdi")
+})
+
+setMethod("summary.pdi", signature(object = "PDIndex"),
+          function(object) {
+              
+              dt <- data.table(object@data)
+              dt[, rowid := 1:nrow(dt)]
+              
+              dt.tmp <- dt
+              setkey(dt.tmp, rowid)
+              dt.tmp
+              
+              dt.tmp$pop.type = NULL
+              
+              dt.tmp <-dt.tmp[, list( max.pdi=apply(.SD,1, max), min.pdi=apply(.SD,1, min), mean.pdi=apply(.SD, 1, mean), se.pdi=apply(.SD, 1, se)), by = rowid]
+              
+              dt <- dt[, list(rowid,pop.type)]
+              setkey(dt, rowid)
+              
+              df <- as.data.frame(dt[dt.tmp])
+                                       
+              return (df)
           }          
 )
 
@@ -143,3 +173,7 @@ as.data.frame.PDIndex = function(x, ...)  {
 
 setAs("PDIndex", "data.frame", function(from)
     as.data.frame.PDIndex(from))
+
+
+
+
