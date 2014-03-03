@@ -1,20 +1,18 @@
-"PDIndex" =  function(df, pop.type, mean.pdi, max.pdi, min.pdi, se.pdi) {
+"PDIndex" =  function(pop.type, scale, data) {
     
     if (!is.data.frame(df)){
         
-        stop("second argument should be a data frame.")
+        stop("The first argument should be a data frame.")
         
     }
     else{
+        
     pop.type=pop.type 
-    mean.pdi=mean.pdi
-    max.pdi=max.pdi 
-    min.pdi=min.pdi
-    se.pdi=se.pdi
-    data=df
+    scale=scale
+    data=data
 }
     
-    new ("PDIndex",  pop.type=pop.type, mean.pdi=mean.pdi, max.pdi=max.pdi, min.pdi=min.pdi,  se.pdi=se.pdi, data=df)
+    new ("PDIndex",  pop.type=pop.type, scale=scale, data = data)
 }
 
 
@@ -125,21 +123,15 @@ setMethod("pdi.index", signature(object = "Individuals"),
           function(object, scale, percent = 95, unin=c("m", "km"),
                    unout=c("ha", "km2", "m2"), ...) {
               
+              # TODO - Add code for validity of the computations: pop.type & scale
+              
               pdi.index <- .computePopulationIndex (object , scale , percent,
                                                    unin , unout , ... )
               
               pop.type <- as.character(populations(object))
-              
-                           
-              max.pdi = apply(pdi.index1,1,max) 
-              min.pdi = apply(pdi.index1,1,min) 
-              mean.pdi = apply(pdi.index1,1,mean) 
-              se.pdi =apply(pdi.index1,1,mean) 
-              
-              pdi.index$pop.type <- pop.type
-              
+                          
               # Create PDIndex object
-              pdi.index<- PDIndex(pdi.index1, pop.type, mean.pdi, max.pdi, min.pdi, se.pdi)
+              pdi.index<- PDIndex(pop.type, scale, pdi.index)
               
               return (pdi.index)
           }          
