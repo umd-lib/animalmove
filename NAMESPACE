@@ -17,7 +17,7 @@ import(Hmisc)
 import(sqldf)
 import(data.table)
 import(RColorBrewer)
-import (RCurl, RUnit, circular, knitr, markdown, ggmap, mapproj)
+import (RCurl, RUnit, knitr, markdown, ggmap, mapproj)
 ## other CRAN packages:
 
 
@@ -31,6 +31,4 @@ export(plot, abs.std.mean)
 #S3 Methods
 S3method(plot, RMIndex)
 S3method(summary,MCIndex) 
-#S3method(aov,MCIndex)
-#S3method(TukeyHSD,MCIndex)
 useDynLib(animalmove, nsreg)

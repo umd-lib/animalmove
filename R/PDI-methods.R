@@ -177,5 +177,48 @@ setAs("PDIndex", "data.frame", function(from)
     as.data.frame.PDIndex(from))
 
 
+setMethod("plot", signature(x="PDIndex", y="missing"),
+          function(x,y, ...){
+        
+              summary.object <- summary.pdi(x)
+              .plot.PDIndex(summary.object, ...)
+          }
+)
+
+
+.plot.PDIndex <- function(object, xlim = NULL, ylim = NULL, ylab = "Population Dispersion Index", xlab = "lag (km)",  col=NULL , linecol = NULL, cex.lab = 2, cex.axis = 2, cex = 2, axes = F, title = NULL, baseline = 100000, addAxes = T ){
+    
+    x.coord <- c(object$scale, rev(object$scale))
+    y.coord <- c(object$mean.pdi + object$se.pdi, rev(object$mean.pdi - object$se.pdi))
+    
+    scale <- object$scale
+    
+    min.y <- min(y.coord)
+    max.y <- max(y.coord)
+    
+    min.x <- min(x.coord)
+    max.x <- max(x.coord)
+    
+    plot(scale, object$mean.pdi, ylim = c(min.y,max.y), xlim = c(min.x,max.x), col = NA,  
+         ylab = ylab, xlab = xlab,
+         cex.lab = cex.lab, cex.axis = cex.lab,cex = cex, axes = axes)
+    
+    color <- col
+    lineCol <- linecol
+    
+    title <- title(main = title)
+    
+    polygon(x.coord, y.coord, col = color, border = NA)
+    lines(object$scale,object$mean.pdi,col = linecol, lwd = 2) # plots PDI
+    
+    lines(c(0,baseline),c(0,0),lwd = 2, lty = 1) # add baseline
+    
+    #Add axes
+    if (addAxes){
+        axis(1, at=seq(0,trunc(max.x),10000),labels = seq(0,(trunc(max.x)/1000),10), cex.axis = cex.axis)
+        axis(2,at = seq(-25000,5000,10000), cex.axis= cex.axis)
+    }
+    
+}
 
 
