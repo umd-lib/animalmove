@@ -23,7 +23,7 @@ Suggests:
     markdown,
     ggmap,
     mapproj   
-Packaged: 2014-02-21 09:46:59 EST; bart
+Packaged: 2014-02-21 09:46:59 EST; ibelyaeva
 NeedsCompilation: yes
 Repository: CRAN
 Date/Publication: 2014-02-10

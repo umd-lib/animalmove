@@ -110,4 +110,7 @@ plot(pdi.index.gazelle, col = colorGazelle, linecol = colorGazelle2, title = "Sp
 plot(pdi.index.moose, col = colorMoose, linecol = colorMoose2, title = "Spatial Population Dispersion - Moose, Kilometers")
 plot(pdi.index.guanaco, col = colorGuanaco, linecol = colorGuanaco2, title = "Spatial Population Dispersion - Guanaco, Kilometers")
 
-
+polygon(pdi.index.caribou, color = colorCaribou, linecol = colorCaribou2)
+polygon(pdi.index.gazelle, color = colorGazelle, linecol = colorGazelle2)
+polygon(pdi.index.moose, color = colorMoose, linecol = colorMoose2)
+polygon(pdi.index.guanaco, color = colorGuanaco, linecol = colorGuanaco2)

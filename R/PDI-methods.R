@@ -186,7 +186,102 @@ setMethod("plot", signature(x="PDIndex", y="missing"),
 )
 
 
-.plot.PDIndex <- function(object, xlim = NULL, ylim = NULL, ylab = "Population Dispersion Index", xlab = "lag (km)",  col=NULL , linecol = NULL, cex.lab = 2, cex.axis = 2, cex = 2, axes = F, title = NULL, baseline = 100000, addAxes = T ){
+.plot.PDIndex <- function(object, xlim = NULL, ylim = NULL, ylab = "Population Dispersion Index", xlab = "lag (km)",  border= NA, col=NULL , linecol = NULL, cex.lab = 2, cex.axis = 2, cex = 2, axes = F, title = NULL, baseline = 100000, lwd = 2, lty = 1, addAxes = T, at.x = NULL, at.y = NULL, xlabels = NULL, ylabels = NULL ){
+    
+    x.coord <- c(object$scale, rev(object$scale))
+    y.coord <- c(object$mean.pdi + object$se.pdi, rev(object$mean.pdi - object$se.pdi))
+    
+    scale <- object$scale
+    
+    min.y <- min(y.coord)
+    max.y <- max(y.coord)
+    
+    min.x <- min(x.coord)
+    max.x <- max(x.coord)
+    
+    # Calculate range of y axes from min y coordinate to max value of y axis
+    ylim <- range(min.y, max.y)
+                  
+    # Calculate range of x axes from min x coordinate to max value of x axis
+    xlim <- range(min.x, max.x)
+    
+    # draw empty plot with empty axes
+    plot(scale, object$mean.pdi, ylim = ylim, xlim = xlim, col = NA,  
+         ylab = ylab, xlab = xlab,
+         cex.lab = cex.lab, cex.axis = cex.lab,cex = cex, axes = axes)
+    
+    color <- col
+    lineCol <- linecol
+    
+    title <- title(main = title)
+    
+    # Plot Confidence Interval as polygon
+    polygon(x.coord, y.coord, col = color, border = border)
+    
+    # Plot PDIndex as lines
+    lines(object$scale,object$mean.pdi,col = linecol, lwd = lwd) 
+    
+    lines(c(0,baseline),c(0,0),lwd = lwd, lty = lty) # add baseline
+    
+    #Add axes
+    if (addAxes){
+        
+        if (is.null(at.y)){
+            by = 10000
+            
+            if (abs(min.y)< 1000 | abs(max.y)< 1000) {
+                by = 1000
+            }
+            
+            at.y = seq(round(min.y, -3), round(max.y + 1000, -3), by)
+        }
+        
+        if (is.null(at.x)){
+            
+            at.x = seq(0,trunc(max.x),10000)
+            xlabels = seq(0,(trunc(max.x)/1000),10)
+        }
+        
+        axis(1, at= at.x, labels = xlabels, cex.axis = cex.axis)
+        axis(2, at = at.y, labels = ylabels, cex.axis= cex.axis)
+    }
+    
+}
+
+setMethod("polygon", signature(x="PDIndex", y="missing"),
+          function(x,y, ...){
+              
+              summary.object <- summary.pdi(x)
+              .polygon.PDIndex(summary.object, ...)
+          }
+)
+
+.polygon.PDIndex <- function(object, y = NULL, density = NULL, angle = 45,
+                 border = NULL, col = NULL, lty = par("lty"),
+                 ..., fillOddEven = FALSE,  color = NA, linecol = NULL, cex.lab = 2, cex.axis = 2, cex = 2, axes = F, title = NULL){
+    
+    x.coord <- c(object$scale, rev(object$scale))
+    y.coord <- c(object$mean.pdi + object$se.pdi, rev(object$mean.pdi - object$se.pdi))
+       
+    linecol <- linecol
+    
+        
+    if (is.null(linecol)){
+        
+        bg.pal <- color.palette(1, palette = c("Dark2"))  
+        linecol <- bg.pal[1]
+
+    }
+    
+    scale <- object$scale
+    
+    min.y <- min(y.coord)
+    max.y <- max(y.coord)
+    
+    min.x <- min(x.coord)
+    max.x <- max(x.coord)
+    
+    title <- title(main = NA)
     
     x.coord <- c(object$scale, rev(object$scale))
     y.coord <- c(object$mean.pdi + object$se.pdi, rev(object$mean.pdi - object$se.pdi))
@@ -202,22 +297,9 @@ setMethod("plot", signature(x="PDIndex", y="missing"),
     plot(scale, object$mean.pdi, ylim = c(min.y,max.y), xlim = c(min.x,max.x), col = NA,  
          ylab = ylab, xlab = xlab,
          cex.lab = cex.lab, cex.axis = cex.lab,cex = cex, axes = axes)
-    
-    color <- col
-    lineCol <- linecol
-    
-    title <- title(main = title)
-    
-    polygon(x.coord, y.coord, col = color, border = NA)
+        
+    polygon(x.coord, y.coord, col = color, border = NA) # plots CI's
     lines(object$scale,object$mean.pdi,col = linecol, lwd = 2) # plots PDI
-    
-    lines(c(0,baseline),c(0,0),lwd = 2, lty = 1) # add baseline
-    
-    #Add axes
-    if (addAxes){
-        axis(1, at=seq(0,trunc(max.x),10000),labels = seq(0,(trunc(max.x)/1000),10), cex.axis = cex.axis)
-        axis(2,at = seq(-25000,5000,10000), cex.axis= cex.axis)
-    }
     
 }
 
