@@ -1,5 +1,6 @@
 color.palette <- function(colourCount = 3, palette = c("Pastel2")){
     
+    colourCount <- colourCount
     colourCount <- max(colourCount, 3)
     pallete     <- palette
     

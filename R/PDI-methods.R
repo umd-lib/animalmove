@@ -162,7 +162,9 @@ setMethod("summary.pdi", signature(object = "PDIndex"),
               setkey(dt, rowid)
               
               df <- as.data.frame(dt[dt.tmp])
-                                       
+              
+              df$scale <- object@scale
+              
               return (df)
           }          
 )
