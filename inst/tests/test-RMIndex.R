@@ -1,6 +1,3 @@
-library(testthat)
-library(animalmove)
-
 data(puechabonsp)
 sampleds <- puechabonsp
 relocs <- sampleds$relocs

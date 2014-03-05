@@ -16,7 +16,7 @@ import(Hmisc)
 import(sqldf)
 import(data.table)
 import(RColorBrewer)
-import (RCurl, RUnit, knitr, markdown, ggmap, mapproj)
+
 ## other CRAN packages:
 
 
