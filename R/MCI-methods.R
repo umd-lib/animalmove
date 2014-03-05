@@ -67,7 +67,13 @@ setMethod("mci.index", signature(object = "Individuals"),
     
     # save data frame
     df <- as.data.frame(xy)
-            
+    
+    abs.distX <- NULL
+    abs.distY <- NULL
+    X <- NULL
+    Y <- NULL
+    pop.type <- NULL
+    
     dt <- data.table(df)
     dt[, abs.distX:= abs.std.mean(X), by= list(pop.type,time.lag)]
     dt[, abs.distY:= abs.std.mean(Y), by= list(pop.type,time.lag)]
@@ -110,6 +116,13 @@ setMethod("mci.index", signature(object = "Individuals"),
     
     # save data frame
     df <- as.data.frame(xy)
+    
+    abs.distX <- NULL
+    abs.distY <- NULL
+    X <- NULL
+    Y <- NULL
+    pop.type <- NULL
+    
     
     dt <- data.table(df)
     dt[, abs.distX:= abs.std.mean(X), by= list(pop.type,time.lag)]
@@ -228,6 +241,9 @@ summary.MCIndex <- function(object, ...){
     cexValue <- cexValue
         
     df <- as.data.frame(x@data)
+    
+    pop.rank <- NULL
+    tmp.rank <- NULL
     
     dt <- as.data.table(df)
     dt[,tmp.rank:=max(mci.index),by=pop.type]

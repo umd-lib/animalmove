@@ -147,6 +147,10 @@ setGeneric("summary.pdi", function(object, ...) {
 setMethod("summary.pdi", signature(object = "PDIndex"),
           function(object, ...) {
               
+              rowid <- NULL
+              .SD   <- NULL
+              pop.type <- NULL
+              
               dt <- data.table(object@data)
               dt[, rowid := 1:nrow(dt)]
               

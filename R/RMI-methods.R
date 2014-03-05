@@ -86,6 +86,9 @@ plot.RMIndex <- function(x,y, ...){
     
     df <- as.data.frame(x@data)
     
+    pop.rank <- NULL
+    tmp.rank <- NULL
+    
     dt <- as.data.table(df)
     dt[,tmp.rank:=max(rmi.index),by=pop.type]
     dt[,pop.rank:=rank(-tmp.rank)]
