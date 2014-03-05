@@ -133,7 +133,7 @@ setMethod("aov", signature(formula = "MCIndex", data = "missing", projections = 
 )
 
 
-.aov.mci <- function (formula, data = NULL, projections = FALSE, qr = TRUE,
+aov.mci <- function (formula, data = NULL, projections = FALSE, qr = TRUE,
     contrasts = NULL, print = FALSE){
     
     print <- print
