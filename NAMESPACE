@@ -2,7 +2,6 @@ exportPattern("^[^\\.]")
 
 ## base packages
 import(methods)
-import(lme4)
 import(chron)
 import(splancs)
 import(adehabitatHR)
@@ -21,7 +20,7 @@ import (RCurl, RUnit, knitr, markdown, ggmap, mapproj)
 ## other CRAN packages:
 
 
-exportClasses(Individuals,RMIndex,MCIndex)
+exportClasses(Individuals,RMIndex,MCIndex, PDIndex)
 
 exportMethods(group.by, populations, summary.rmi, rmi.index, plot, mci.index, aov, TukeyHSD, kruskal.test, kruskalmc, pdi.index, summary.pdi, polygon)
 
@@ -30,5 +29,6 @@ export(plot, abs.std.mean)
 
 #S3 Methods
 S3method(plot, RMIndex)
-S3method(summary,MCIndex) 
+S3method(summary,MCIndex)
+
 useDynLib(animalmove, nsreg)

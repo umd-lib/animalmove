@@ -28,13 +28,5 @@ setValidity("MCIndex",
 }
 
 
-#as.data.frame.MCIndex = function(x, ...)  {
- #   data.frame(x@data)
-#}
-
-#setAs("MCIndex", "data.frame", function(from)
- #   as.data.frame.MCIndex(from))
-
-
 
 

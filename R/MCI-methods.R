@@ -92,7 +92,7 @@ setMethod("mci.index", signature(object = "Individuals"),
     if (ncol(coordinates(xy))>2)
         stop("xy should be defined in two dimensions")
     
-    group.by = colnames(populations(pop.data))
+    group.by = colnames(populations(xy))
     index.group.by = grep(group.by, colnames(xy@data))
     colnames(xy@data)[index.group.by] <- "pop.type"
     
@@ -125,21 +125,31 @@ setMethod("mci.index", signature(object = "Individuals"),
 
 
 setMethod("aov", signature(formula = "MCIndex", data = "missing", projections = "missing", qr="missing", contrasts = "missing"),
-          function(formula, data, projections, qr, contrasts, print = FALSE, ...){
+          function(formula, data, projections, qr, contrasts, ...){
               
-              print <- print
-              object <- formula
-              species <- object@data$pop.type
-              model <- aov(object@data$mci.index ~ species)
-              
-              if (print) {
-                summary(model)
-               }
-              
-              return (model)
+              aov.mci(formula, ...)
               
           }
 )
+
+
+.aov.mci <- function (formula, data = NULL, projections = FALSE, qr = TRUE,
+    contrasts = NULL, print = FALSE){
+    
+    print <- print
+    object <- formula
+    data <- object@data
+    species <- object@data$pop.type
+    model <- aov(mci.index ~ species, data = data)
+    
+    if (print) {
+        summary(model)
+    }
+    
+    return (model)
+    
+}
+
 
 setMethod("TukeyHSD", signature(x = "MCIndex", which = "missing"),
           function(x, which, ...){
@@ -258,3 +268,10 @@ setMethod("plot", signature(x="MCIndex", y="missing"),
                .plot.MCIndex(x, ...)
           }
 )
+
+as.data.frame.MCIndex = function(x, ...)  {
+    data.frame(x@data)
+}
+
+setAs("MCIndex", "data.frame", function(from)
+    as.data.frame.MCIndex(from))
