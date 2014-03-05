@@ -193,7 +193,7 @@ setMethod("kruskalmc", signature(resp = "MCIndex"),
           }
 )
 
-summary.MCIndex <- function(object){
+summary.MCIndex <- function(object, ...){
     
     if (!inherits(object, "MCIndex")){
         stop("Invalid object type. Expected MCIndex.")
@@ -206,6 +206,9 @@ summary.MCIndex <- function(object){
     print(kruskal.test(object))
     
     print(kruskalmc(object))
+    
+    class(object) = "summary.MCIndex"
+    object
     
 }
 

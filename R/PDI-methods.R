@@ -37,9 +37,9 @@ getComplementData <- function(id, df){
     
 }
 
-as.matrix.extractPointsXY <- function(df){
+as.matrix.extractPointsXY <- function(x, ...){
  
-    this.df <- df
+    this.df <- x
     spatial.points <- SpatialPoints(this.df)
     matrix.points <- as.matrix(spatial.points@coords)
     
@@ -47,9 +47,9 @@ as.matrix.extractPointsXY <- function(df){
     
 }
 
-as.matrix.extractPolygonPointsXY <- function(polygon){
+as.matrix.extractPolygonPointsXY <- function(x, ...){
     
-    this.polygon <- polygon
+    this.polygon <- x
     polygon.xy <- this.polygon@polygons[[1]]@Polygons[[1]]@coords
               
     return (polygon.xy)
@@ -140,12 +140,12 @@ setMethod("pdi.index", signature(object = "Individuals"),
 )
 
 
-setGeneric("summary.pdi", function(object) {
+setGeneric("summary.pdi", function(object, ...) {
     standardGeneric("summary.pdi")
 })
 
 setMethod("summary.pdi", signature(object = "PDIndex"),
-          function(object) {
+          function(object, ...) {
               
               dt <- data.table(object@data)
               dt[, rowid := 1:nrow(dt)]
