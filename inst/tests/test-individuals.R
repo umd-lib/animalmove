@@ -1,17 +1,5 @@
 library(testthat)
-require(sqldf)
-require(adehabitatHR)
-require(sp)
-
-library(adehabitatHR)
-library(sp)
-library(sqldf)
-
-source('/apps/git/animalmove/R/Class-Individuals.R')
-source('/apps/git/animalmove/R/Individuals-methods.R')
-source('/apps/git/animalmove/R/MovementAnalysis-methods.R')
-source('/apps/git/animalmove/R/Class-RMI.R')
-source('/apps/git/animalmove/R/RMI-methods.R')
+library(animalmove)
 
 data(puechabonsp)
 sampleds <- puechabonsp

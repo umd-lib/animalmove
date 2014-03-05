@@ -1,17 +1,5 @@
 library(testthat)
-require(sqldf)
-require(adehabitatHR)
-require(sp)
-
-library(adehabitatHR)
-library(sp)
-library(sqldf)
-
-source('/apps/git/animalmove/R/Class-Individuals.R')
-source('/apps/git/animalmove/R/Individuals-methods.R')
-source('/apps/git/animalmove/R/MovementAnalysis-methods.R')
-source('/apps/git/animalmove/R/Class-RMI.R')
-source('/apps/git/animalmove/R/RMI-methods.R')
+library(animalmove)
 
 data(puechabonsp)
 sampleds <- puechabonsp
@@ -30,7 +18,7 @@ test_that("compute.RealizedMobilityIndex is computed correctly", {
 
 test_that("Object creation works properly for RMIndex objects", {
   expect_true(class(rmi) == "RMIndex")
-  expect_equal(length(r@data), 5)
+  expect_equal(length(rmi@data), 5)
 })
 
 test_that("RMIndex can be properly summarized using RMIndex object", {
