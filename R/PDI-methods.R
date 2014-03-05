@@ -139,7 +139,12 @@ setMethod("pdi.index", signature(object = "Individuals"),
           }          
 )
 
-
+summary.PDIndex <- function(object, ...){
+  if (!inherits(object, "PDIndex")){
+    stop("Invalid object type. Expected PDIndex.")
+  }
+  summary.pdi(object)
+}
 setGeneric("summary.pdi", function(object, ...) {
     standardGeneric("summary.pdi")
 })
