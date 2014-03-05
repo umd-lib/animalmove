@@ -5,7 +5,7 @@ abs.std.mean <- function(x){
     
     len <- length(x)
     x <- data.table(x)
-    abs.dist.mean <- x[,list (vector.mean=sum(abs(x - mean(x))), mean = mean(x))]
+    abs.dist.mean <- x[,list (vector.mean=sum(abs(x - mean(x))), mean = mean(abs(x)))]
     sum.abs.vector.mean <- abs.dist.mean[,1, with = FALSE]
     abs.mean <- abs.dist.mean[,2, with = FALSE]
     sum.abs.vector.mean <- sum.abs.vector.mean[1]/len
@@ -30,7 +30,7 @@ setMethod("mci.index", signature(object = c("SpatialPointsDataFrame")),
 setMethod("mci.index", signature(object = "Individuals"),
           function(object, time.lag, ...) {
               
-              mci.index <- .mci.spatial.index.InduvidualsDataFrame (object, time.lag, ... )
+              mci.index <- .mci.spatial.index.IndividualsDataFrame (object, time.lag, ... )
               
               return (mci.index)
           }          
@@ -86,7 +86,7 @@ setMethod("mci.index", signature(object = "Individuals"),
     return (df)
 }
 
-.mci.spatial.index.InduvidualsDataFrame <- function(xy, time.lag){
+.mci.spatial.index.IndividualsDataFrame <- function(xy, time.lag){
     
     ## Verifications
     if (!inherits(xy, "SpatialPoints"))

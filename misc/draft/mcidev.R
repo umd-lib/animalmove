@@ -56,7 +56,7 @@ res.ind <- mci.index(pop.data, group.by = c("type"), time.lag = c("time.lag"))
 head(res.ind)
 
 # test - call using internal function
-#res.ind <- .mci.spatial.index.InduvidualsDataFrame(pop.data,  time.lag = c("time.lag"))
+#res.ind <- .mci.spatial.index.IndividualsDataFrame(pop.data,  time.lag = c("time.lag"))
 # display data
 #head(res.ind)
 
