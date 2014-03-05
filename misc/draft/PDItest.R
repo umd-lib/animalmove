@@ -99,18 +99,10 @@ axis(2,at = seq(-25000,5000,10000), cex.axis= cexValue)
 #Add legend
 legend(-1000,-18000, legend = c("Caribou (C)", "M. gazelle (MG)", "Guanaco (G)","Moose (M)"), col = c( colorCaribou2,colorGazelle2, colorGuanaco2,colorMoose2),        box.lty= 0,lty = 1, lwd = 3, cex = cexValue, bg = NA)
 
-#.plot.PDIndex(summary.caribou, col = colorCaribou, linecol = colorCaribou2, title = "Spatial Population Dispersion - Caribou, Kilometers")
-#.plot.PDIndex(summary.gazelle, col = colorGazelle, linecol = colorGazelle2, title = "Spatial Population Dispersion - Gazelle, Kilometers")
-#.plot.PDIndex(summary.moose, col = colorMoose, linecol = colorMoose2, title = "Spatial Population Dispersion - Moose, Kilometers")
-#.plot.PDIndex(summary.guanaco, col = colorGuanaco, linecol = colorGuanaco2, title = "Spatial Population Dispersion - Guanaco, Kilometers")
-
 
 plot(pdi.index.caribou, col = colorCaribou, linecol = colorCaribou2, title = "Spatial Population Dispersion - Caribou, Kilometers")
 plot(pdi.index.gazelle, col = colorGazelle, linecol = colorGazelle2, title = "Spatial Population Dispersion - Gazelle, Kilometers")
 plot(pdi.index.moose, col = colorMoose, linecol = colorMoose2, title = "Spatial Population Dispersion - Moose, Kilometers")
 plot(pdi.index.guanaco, col = colorGuanaco, linecol = colorGuanaco2, title = "Spatial Population Dispersion - Guanaco, Kilometers")
 
-#polygon(pdi.index.caribou, color = colorCaribou, linecol = colorCaribou2)
-#polygon(pdi.index.gazelle, color = colorGazelle, linecol = colorGazelle2)
-#polygon(pdi.index.moose, color = colorMoose, linecol = colorMoose2)
-#polygon(pdi.index.guanaco, color = colorGuanaco, linecol = colorGuanaco2)
+

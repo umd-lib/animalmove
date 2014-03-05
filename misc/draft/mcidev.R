@@ -1,24 +1,4 @@
-
-require(sqldf)
-require(adehabitatHR)
-require(sp)
-require(data.table)
-require(RColorBrewer)
-require(pgirmess)
-
-library(adehabitatHR)
-library(sp)
-library(sqldf)
-library(data.table)
-library(RColorBrewer)
-
-source('/apps/git/animalmove/R/Class-Individuals.R', echo=TRUE)
-source('/apps/git/animalmove/R/Individuals-methods.R', echo=TRUE)
-source('/apps/git/animalmove/R/MovementAnalysis-methods.R', echo=TRUE)
-source('/apps/git/animalmove/R/RMI-methods.R', echo=TRUE)
-source('/apps/git/animalmove/R/Class-RMI.R', echo=TRUE)
-source('/apps/git/animalmove/R/MCI-methods.R', echo=TRUE)
-
+library(animalmove)
 data(puechabonsp)
 
 # compute absolute distance
@@ -44,7 +24,7 @@ res <- .mci.spatial.index.SpatialPointsDataFrame(df, group.by = c("Name"), time.
 head(res)
 
 # call using generic method
-res< -mci.index(df, group.by = c("Name"), time.lag = c("time.lag"))
+res<- mci.index(df, group.by = c("Name"), time.lag = c("time.lag"))
 
 # display result
 head(res)
@@ -64,6 +44,7 @@ pop.data@data[1:50,6] <- 200
 # display data population data
 str(pop.data)
 
+pop.data
 
 group.by = colnames(populations(pop.data))
 index.group.by = grep(group.by, colnames(pop.data@data))
@@ -75,15 +56,18 @@ res.ind <- mci.index(pop.data, group.by = c("type"), time.lag = c("time.lag"))
 head(res.ind)
 
 # test - call using internal function
-res.ind <- .mci.spatial.index.InduvidualsDataFrame(pop.data,  time.lag = c("time.lag"))
+#res.ind <- .mci.spatial.index.InduvidualsDataFrame(pop.data,  time.lag = c("time.lag"))
 # display data
-head(res.ind)
+#head(res.ind)
 
 # Create MCIndex object
 mci.object <- MCIndex(res.ind)
 
+mci.object
+
 # Compute ANOVA stats
-anova.model <- aov(mci.object, TRUE)
+
+anova.model <- aov(mci.object)
 
 # display anova
 anova.model
@@ -113,6 +97,8 @@ df$pop.type <- reorder(df$pop.type, -df$pop.rank)
 
 par(mar = c(5, 5, 2, 1))
 cexValue = 2
+
+index <- as.integer(factor(as.integer(factor(df$pop.type))))
 
 fg.pal <- color.palette(length(unique(df$pop.type)))
 bg.pal <- color.palette(length(unique(df$pop.type)), palette = c("Dark2"))  
