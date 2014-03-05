@@ -1,4 +1,4 @@
-abs.std.mean <- function(x, ... ){
+abs.std.mean <- function(x){
     
     # x should be a numerical vector
     # add check for that
