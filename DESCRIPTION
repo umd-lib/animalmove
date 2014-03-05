@@ -19,7 +19,7 @@ url: http://www.clfs.umd.edu/biology/faganlab/movement/index.html
 LazyData: true
 Suggests:
     RCurl,
-    testthat (>= 0.8.1),
+    testthat,
     RUnit,
     knitr,
     markdown,
