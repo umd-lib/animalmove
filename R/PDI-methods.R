@@ -37,6 +37,10 @@ getComplementData <- function(id, df){
     
 }
 
+#' Extracts XY coordinates from the Individuals object
+#' @param x - Individual object
+#' @export
+#' @rdname PDI-methods
 as.matrix.extractPointsXY <- function(x, ...){
  
     this.df <- x
@@ -47,6 +51,10 @@ as.matrix.extractPointsXY <- function(x, ...){
     
 }
 
+#' Extracts XY coordinates from the Spatial Polygon of the Individual object
+#' @param x - Spatial Polygon
+#' @export
+#' @rdname PDI-methods
 as.matrix.extractPolygonPointsXY <- function(x, ...){
     
     this.polygon <- x
@@ -56,6 +64,11 @@ as.matrix.extractPolygonPointsXY <- function(x, ...){
     
 }
 
+#' Computes biviariate function for a single animal constructed as the Individual object
+#' @param df1 - data frame of coordinates of this animal id
+#' @param df2 - data frame of coordinates of other animals from the same population
+#' @export
+#' @rdname PDI-methods
  compute.k12hat <- function(df1, df2, polygon, polyscale){
     
     this.df1 <- df1
@@ -74,6 +87,11 @@ as.matrix.extractPolygonPointsXY <- function(x, ...){
     
 }
 
+#' Computes PDIndex for a single animal constructed as the Individual object
+#' @param id - animal id
+#' @param df - data frame of the Individuals of the same population
+#' @export
+#' @rdname PDI-methods
 compute.Individual.PDI <- function(id, df, polygon, polyscale){
     
     df.data <- getData(id, df)
@@ -114,11 +132,18 @@ compute.Individual.PDI <- function(id, df, polygon, polyscale){
     return (tmpdf)
 }
 
+#' Computes Population Dispersion Index for the population
+#' @param object An Individual object that contains species from the same population
+
+#' @exportMethod
 setGeneric("pdi.index", function(object, scale, percent = 95, unin=c("m", "km"),
                                  unout=c("ha", "km2", "m2"), ...) {
     standardGeneric("pdi.index")
 })
 
+#' Computes Population Dispersion Index for the population
+#' @param object An Individual object that contains species from the same population
+#' @rdname PCI-methods
 setMethod("pdi.index", signature(object = "Individuals"),
           function(object, scale, percent = 95, unin=c("m", "km"),
                    unout=c("ha", "km2", "m2"), ...) {
@@ -139,15 +164,22 @@ setMethod("pdi.index", signature(object = "Individuals"),
           }          
 )
 
+#' Prints Summary for the Population Dispersion Index
+#' @param object - PDIndex
 summary.PDIndex <- function(object, ...){
   if (!inherits(object, "PDIndex")){
     stop("Invalid object type. Expected PDIndex.")
   }
   summary.pdi(object)
 }
+
+#' Prints Summary for the Population Dispersion Index
+#' @param object Population Dispersion Index 
+#'@exportMethod summary PDIndex
 setGeneric("summary.pdi", function(object, ...) {
     standardGeneric("summary.pdi")
 })
+
 
 setMethod("summary.pdi", signature(object = "PDIndex"),
           function(object, ...) {
@@ -178,10 +210,13 @@ setMethod("summary.pdi", signature(object = "PDIndex"),
           }          
 )
 
+#' Transforms to a data frame from the PDIndex object
+#' @export
 as.data.frame.PDIndex = function(x, ...)  {
     data.frame(x@data)
 }
 
+#' @exportMethod
 setAs("PDIndex", "data.frame", function(from)
     as.data.frame.PDIndex(from))
 
@@ -257,6 +292,8 @@ setMethod("plot", signature(x="PDIndex", y="missing"),
     
 }
 
+#' Plots Population Dispersion Index Object
+#' @exportMethod
 setMethod("polygon", signature(x="PDIndex", y="missing"),
           function(x,y, ...){
               

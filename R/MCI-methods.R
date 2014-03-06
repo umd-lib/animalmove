@@ -1,3 +1,8 @@
+#' Computing the standartizied distance from the mean
+#' @param x - numeric vector
+#' @export
+#' @rdname MCI-methods
+#' @return standartizied distance from the mean
 abs.std.mean <- function(x){
     
     # x should be a numerical vector
@@ -14,11 +19,16 @@ abs.std.mean <- function(x){
     return (abs.std.mean)
     
 }
-
+#' Movement Coordination Index
+#' @param object An Individuals object
+#' @exportMethod
 setGeneric("mci.index", function(object, group.by="missing", time.lag, ...) {
     standardGeneric("mci.index")
 })
 
+#' Movement Coordination Index
+#' @param object An Individuals object
+#' @rdname MCI-methods
 setMethod("mci.index", signature(object = c("SpatialPointsDataFrame")),
           function(object, group.by, time.lag, ...) {
               
@@ -27,6 +37,9 @@ setMethod("mci.index", signature(object = c("SpatialPointsDataFrame")),
        }          
 )
 
+#' Movement Coordination Index
+#' @param object An Individuals object
+#' @rdname MCI-methods
 setMethod("mci.index", signature(object = "Individuals"),
           function(object, time.lag, ...) {
               
@@ -136,7 +149,10 @@ setMethod("mci.index", signature(object = "Individuals"),
     return (df)
 }
 
-
+#' ANOVA object computed for Movement Coordination Index object
+#' @param object An MCIndex object
+#' @rdname MCI-methods
+#' @exportMethod
 setMethod("aov", signature(formula = "MCIndex", data = "missing", projections = "missing", qr="missing", contrasts = "missing"),
           function(formula, data, projections, qr, contrasts, ...){
               
@@ -145,7 +161,9 @@ setMethod("aov", signature(formula = "MCIndex", data = "missing", projections = 
           }
 )
 
-
+#' Helper method to compute MCIndex
+#' @param object An MCIndex object
+#' @rdname MCI-methods
 aov.mci <- function (formula, data = NULL, projections = FALSE, qr = TRUE,
     contrasts = NULL, print = FALSE){
     
@@ -163,7 +181,10 @@ aov.mci <- function (formula, data = NULL, projections = FALSE, qr = TRUE,
     
 }
 
-
+#' TukeyHSD object computed for Movement Coordination Index object
+#' @param object An MCIndex object
+#' @rdname MCI-methods
+#' @exportMethod
 setMethod("TukeyHSD", signature(x = "MCIndex", which = "missing"),
           function(x, which, ...){
               
@@ -175,7 +196,10 @@ setMethod("TukeyHSD", signature(x = "MCIndex", which = "missing"),
           }
 )
 
-
+#' Kruskal Test object computed for Movement Coordination Index object
+#' @param object An MCIndex object
+#' @rdname MCI-methods
+#' @exportMethod
 setMethod("kruskal.test", signature(x = "MCIndex"),
           function(x, ...){
               
@@ -191,6 +215,10 @@ setMethod("kruskal.test", signature(x = "MCIndex"),
           }
 )
 
+#' KruskalMC  object computed for Movement Coordination Index object
+#' @param object An MCIndex object
+#' @rdname MCI-methods
+#' @exportMethod
 setMethod("kruskalmc", signature(resp = "MCIndex"),
           function(resp, ...){
               
@@ -206,6 +234,14 @@ setMethod("kruskalmc", signature(resp = "MCIndex"),
           }
 )
 
+#' Prints Summary for the Movement Coordination Index
+#' This includes statistical tests:
+#' ANOVA
+#' TukeyHSD
+#' Kruskaltest
+#' Kruskalmc
+#' @export
+#' @S3method
 summary.MCIndex <- function(object, ...){
     
     if (!inherits(object, "MCIndex")){
@@ -224,6 +260,8 @@ summary.MCIndex <- function(object, ...){
     object
     
 }
+
+
 
 .plot.MCIndex <- function(x, ..., range = 1.5, width = NULL, varwidth = FALSE,
                           notch = FALSE, outline = TRUE, names, plot = TRUE,
@@ -281,16 +319,20 @@ summary.MCIndex <- function(object, ...){
 }
 
 
-
+#' Plots Movement Coordination Index Object
+#' @exportMethod
 setMethod("plot", signature(x="MCIndex", y="missing"),
          function(x,y, ...){
                .plot.MCIndex(x, ...)
           }
 )
 
+#' Transforms to a data frame from the MCIndex object
+#' @export
 as.data.frame.MCIndex = function(x, ...)  {
     data.frame(x@data)
 }
 
+#' @exportMethod
 setAs("MCIndex", "data.frame", function(from)
     as.data.frame.MCIndex(from))

@@ -23,6 +23,7 @@ setMethod("group.by", "Individuals",
           }
 )
 
+#'@exportMethod populations
 setGeneric("populations", function(this) {
     standardGeneric("populations")
 })
@@ -33,6 +34,7 @@ setMethod("populations", "Individuals",
           }
 )
 
+#'@exportMethod rmi.index
 setGeneric("rmi.index", function(this, percent = 95, unin=c("m", "km"),
                            unout=c("ha", "km2", "m2"), id) {
     standardGeneric("rmi.index")

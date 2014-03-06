@@ -22,7 +22,7 @@ import(RColorBrewer)
 
 exportClasses(Individuals,RMIndex,MCIndex, PDIndex)
 
-exportMethods(group.by, populations, summary.rmi, rmi.index, plot, mci.index, aov, TukeyHSD, kruskal.test, kruskalmc, pdi.index, summary.pdi, polygon)
+exportMethods(group.by, populations, summary, rmi.index, plot, mci.index, aov, TukeyHSD, kruskal.test, kruskalmc, pdi.index, summary.pdi, polygon)
 
 export(plot)
 

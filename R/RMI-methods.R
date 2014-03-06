@@ -1,3 +1,23 @@
+#' The RMI class
+#'
+#' The \code{RMI} object contains Realized Mobility Index data frame, which is computed for the populations of Inidividuals. 
+#'
+#' This line and the next ones go into the details.
+#' This line thus appears in the details as well.
+#'
+#'@section Slots: 
+#'  \describe{
+#'    \item{\code{group.by}:}{Object of class \code{"character"}, column name in the attribute data.frame that contains population type of the animal belongs to;}
+#'    \item{\code{data}:}{Object of class \code{"data.frame"}, additional data of that object that is stored in the SpatialPointsDataFrame}
+#'  }
+#'
+#'  
+#' @note Initial implementation of the package does not include export of this object to other packages to program against
+#' @name Individuals 
+#' @rdname Individuals
+#' @aliases Individuals-class
+#' @exportClass Individuals
+#' @author Irina Belyaeva
 "RMIndex" =  function(df) {
     
     if (is.data.frame(df)){
@@ -58,25 +78,21 @@ compute.RealizedMobilityIndex <- function(xy, percent = 95,
 }
 
 
-setGeneric("summary.rmi", function(object, ...) {
-    standardGeneric("summary.rmi")
-})
+#'@exportMethod summary
+setMethod("summary", "RMIndex", function(object, ...) {
+    df = as.data.frame(object@data)
+    tapply(df$rmi.index, df$pop.type, summary)
+}  )
 
-setMethod("summary.rmi", "RMIndex",
-          function(object, ...) {
-              df = as.data.frame(object@data)
-              tapply(df$rmi.index, df$pop.type, summary)
-          }          
-)
-
-
-setMethod("summary.rmi", "data.frame",
+setMethod("summary", "data.frame",
           function(object, ...) {
               df = as.data.frame(object)
               tapply(df$rmi.index, df$pop.type, summary)
           }          
 )
 
+#' Helper method to plot RMIndex
+#' @param RMIndex
 plot.RMIndex <- function(x,y, ...){
     
      
@@ -88,6 +104,8 @@ plot.RMIndex <- function(x,y, ...){
     
     pop.rank <- NULL
     tmp.rank <- NULL
+    
+    cexValue = 2
     
     dt <- as.data.table(df)
     dt[,tmp.rank:=max(rmi.index),by=pop.type]
@@ -115,14 +133,16 @@ plot.RMIndex <- function(x,y, ...){
     df$color <- fg.pal[index]
     df$bgcolor <- bg.pal[index]
 
-    cexValue = 2
-    
     points(this.x, this.y ,col= df$color, bg =  df$bgcolor,
            pch = 25,cex = cexValue+2,lwd = 2)
     
     
 }
 
+#' Plot RMIndex object
+#' @param RMIndex
+#' @rdname RMI-methods
+#' @exportMethod
 setMethod("plot", signature(x="RMIndex", y="missing"),
           function(x,y, ...){
               

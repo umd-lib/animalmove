@@ -19,11 +19,11 @@ test_that("Object creation works properly for RMIndex objects", {
 })
 
 test_that("RMIndex can be properly summarized using RMIndex object", {
-  summary <- summary.rmi(rmi)
+  summary <- summary(rmi)
   expect_equal(length(summary), 2)
 })
 
 test_that("RMIndex can be properly summarized using data.frame", {
-  summary <- summary.rmi(rmi.df)
+  summary <- summary(rmi.df)
   expect_equal(length(summary), 2)
 })

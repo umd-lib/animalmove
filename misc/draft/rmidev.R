@@ -82,6 +82,8 @@ rmi.object <- RMIndex(rmi.index.pop)
 
 summary.rmi(rmi.object)
 
+summary(rmi.object)
+
 summary.rmi(rmi.index.pop)
 
 # Default plot values
