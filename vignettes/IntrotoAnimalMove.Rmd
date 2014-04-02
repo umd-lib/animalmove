@@ -37,24 +37,10 @@ The analyses assume the relocation data of multiple species are preliminary sync
 
 We start with the import of the library **animalmove** in R environment. The package can be installed in the local system from the source package archive for OS X or Win platform.
 
-Package installation
-----------------------------
-
-Build Package from source
-
-* In the project directory run:
-    * "R CMD BUILD ."
-
-    Optional
-      Set environment variable _R_CHECK_FORCE_SUGGESTS_ to false to avoid errors related to Suggest entry in the namespace
-      export _R_CHECK_FORCE_SUGGESTS_=FALSE
+## [Package Installation](../README.md)
 
 
-* Unpack the source package in the directory on the local file system
-    * In the project directory run:
-    R CMD INSTALL .
-
-```{r installation}
+```{r results='hide', message=FALSE, warning=FALSE}
 
 # Load library
 library(animalmove)
@@ -67,12 +53,12 @@ The data can be imported in R using conventional form of reading data from csv/t
 
 ```{r data import}
 # Read data
-# the sample data set is located in misc directory of the source archive.
+# the sample data set is located in data directory of the source archive.
 
-caribou<-read.csv("/apps/git/animalmove/misc/originaldata/16_day_5_individuals_data_Caribou.csv")
-gazelle<-read.csv("/apps/git/animalmove/misc/originaldata/16_day_5_individuals_data_Gazelle.csv")
-moose<-read.csv("/apps/git/animalmove/misc/originaldata/16_day_5_individuals_data_Moose.csv")
-guanaco<-read.csv("/apps/git/animalmove/misc/originaldata/16_day_5_individuals_data_Gaunaco.csv")
+caribou<-read.csv("../data/16_day_5_individuals_data_Caribou.csv")
+gazelle<-read.csv("../data/16_day_5_individuals_data_Gazelle.csv")
+moose<-read.csv("../data/16_day_5_individuals_data_Moose.csv")
+guanaco<-read.csv("../data/16_day_5_individuals_data_Gaunaco.csv")
 ```
 
 
@@ -259,6 +245,31 @@ summary.gazelle <- summary.pdi(pdi.index.gazelle)
 summary.guanaco <- summary.pdi(pdi.index.guanaco)
 summary.moose <- summary.pdi(pdi.index.moose)
 
+```
+### PDI Index Summaries
+
+#### Caribou PDI Summary
+```{r}
+summary.caribou
+```
+#### Gazelle PDI Summary
+```{r}
+summary.gazelle
+```
+
+#### Guanaco PDI Summary
+```{r}
+summary.guanaco
+```
+
+#### Moose PDI Summary
+```{r}
+summary.moose
+```
+
+
+### Plot PDI
+```{r}
 # Create X and Y axes for each species
 
 # caribou
@@ -333,7 +344,7 @@ axis(2,at = seq(-25000,5000,10000), cex.axis= cexValue)
 #Add legend
 legend(-1000,-18000, legend = c("Caribou (C)", "M. gazelle (MG)", "Guanaco (G)","Moose (M)"), col = c( colorCaribou2,colorGazelle2, colorGuanaco2,colorMoose2),        box.lty= 0,lty = 1, lwd = 3, cex = cexValue, bg = NA)
 par(mfrow=c(2,2))
-par(cex=0.35)
+par(cex=0.4)
 plot(pdi.index.caribou, col = colorCaribou, linecol = colorCaribou2, title = "Spatial Population Dispersion - Caribou, Kilometers")
 plot(pdi.index.gazelle, col = colorGazelle, linecol = colorGazelle2, title = "Spatial Population Dispersion - Gazelle, Kilometers")
 plot(pdi.index.moose, col = colorMoose, linecol = colorMoose2, title = "Spatial Population Dispersion - Moose, Kilometers")

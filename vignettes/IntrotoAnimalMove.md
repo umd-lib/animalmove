@@ -35,104 +35,14 @@ The analyses assume the relocation data of multiple species are preliminary sync
 
 We start with the import of the library **animalmove** in R environment. The package can be installed in the local system from the source package archive for OS X or Win platform.
 
-Package installation
-----------------------------
+## [Package Installation](../README.md)
 
-Build Package from source
-
-* In the project directory run:
-    * "R CMD BUILD ."
-
-    Optional
-      Set environment variable _R_CHECK_FORCE_SUGGESTS_ to false to avoid errors related to Suggest entry in the namespace
-      export _R_CHECK_FORCE_SUGGESTS_=FALSE
-
-
-* Unpack the source package in the directory on the local file system
-    * In the project directory run:
-    R CMD INSTALL .
 
 
 ```r
 
 # Load library
 library(animalmove)
-```
-
-```
-## Loading required package: chron
-## Loading required package: splancs
-## Loading required package: sp
-## 
-## Spatial Point Pattern Analysis Code in S-Plus
-##  
-##  Version 2 - Spatial and Space-Time analysis
-## 
-## Loading required package: adehabitatHR
-## Loading required package: deldir
-## deldir 0.1-5
-## Loading required package: ade4
-## Loading required package: adehabitatMA
-## Loading required package: adehabitatLT
-## Loading required package: CircStats
-## Loading required package: MASS
-## Loading required package: boot
-## Loading required package: sciplot
-## Loading required package: lme4
-## Loading required package: lattice
-## 
-## Attaching package: 'lattice'
-## 
-## The following object is masked from 'package:boot':
-## 
-##     melanoma
-## 
-## Loading required package: Matrix
-## Loading required package: languageR
-## Loading required package: Hmisc
-## Loading required package: grid
-## Loading required package: survival
-## Loading required package: splines
-## 
-## Attaching package: 'survival'
-## 
-## The following object is masked from 'package:boot':
-## 
-##     aml
-## 
-## Loading required package: Formula
-## 
-## Attaching package: 'Hmisc'
-## 
-## The following object is masked from 'package:splancs':
-## 
-##     zoom
-## 
-## The following objects are masked from 'package:base':
-## 
-##     format.pval, round.POSIXt, trunc.POSIXt, units
-## 
-## Loading required package: rgdal
-## rgdal: version: 0.8-16, (SVN revision 498)
-## Geospatial Data Abstraction Library extensions to R successfully loaded
-## Loaded GDAL runtime: GDAL 1.9.2, released 2012/10/08
-## Path to GDAL shared files: /Library/Frameworks/R.framework/Versions/3.0/Resources/library/rgdal/gdal
-## Loaded PROJ.4 runtime: Rel. 4.8.0, 6 March 2012, [PJ_VERSION: 480]
-## Path to PROJ.4 shared files: /Library/Frameworks/R.framework/Versions/3.0/Resources/library/rgdal/proj
-## Loading required package: sqldf
-## Loading required package: DBI
-## Loading required package: gsubfn
-## Loading required package: proto
-## Loading required namespace: tcltk
-## Loading required package: RSQLite
-## Loading required package: RSQLite.extfuns
-## Loading required package: data.table
-## Loading required package: RColorBrewer
-```
-
-```
-## Warning: replacing previous import by 'Hmisc::label' when loading 'animalmove'
-## Warning: replacing previous import by 'Hmisc::zoom' when loading 'animalmove'
 ```
 
 
@@ -143,13 +53,13 @@ The data can be imported in R using conventional form of reading data from csv/t
 
 
 ```r
-# Read data the sample data set is located in misc directory of the source
+# Read data the sample data set is located in data directory of the source
 # archive.
 
-caribou <- read.csv("/apps/git/animalmove/misc/originaldata/16_day_5_individuals_data_Caribou.csv")
-gazelle <- read.csv("/apps/git/animalmove/misc/originaldata/16_day_5_individuals_data_Gazelle.csv")
-moose <- read.csv("/apps/git/animalmove/misc/originaldata/16_day_5_individuals_data_Moose.csv")
-guanaco <- read.csv("/apps/git/animalmove/misc/originaldata/16_day_5_individuals_data_Gaunaco.csv")
+caribou <- read.csv("../data/16_day_5_individuals_data_Caribou.csv")
+gazelle <- read.csv("../data/16_day_5_individuals_data_Gazelle.csv")
+moose <- read.csv("../data/16_day_5_individuals_data_Moose.csv")
+guanaco <- read.csv("../data/16_day_5_individuals_data_Gaunaco.csv")
 ```
 
 
@@ -619,7 +529,151 @@ summary.caribou <- summary.pdi(pdi.index.caribou)
 summary.gazelle <- summary.pdi(pdi.index.gazelle)
 summary.guanaco <- summary.pdi(pdi.index.guanaco)
 summary.moose <- summary.pdi(pdi.index.moose)
+```
 
+### PDI Index Summaries
+
+#### Caribou PDI Summary
+
+```r
+summary.caribou
+```
+
+```
+##    rowid pop.type max.pdi min.pdi mean.pdi se.pdi  scale
+## 1      1  caribou     0.0       0        0      0      0
+## 2      2  caribou  5000.0   -8050    -1687   2779   5000
+## 3      3  caribou -2076.1  -13645    -7620   2337  10000
+## 4      4  caribou -4964.1  -19141   -11974   3151  15000
+## 5      5  caribou -1935.4  -21003   -12932   3785  20000
+## 6      6  caribou -2901.3  -23581   -13914   4297  25000
+## 7      7  caribou -4143.6  -26083   -16021   4776  30000
+## 8      8  caribou -4325.4  -28574   -17352   5302  35000
+## 9      9  caribou -3548.7  -31364   -18721   6032  40000
+## 10    10  caribou -2552.3  -32152   -18981   6561  45000
+## 11    11  caribou -2170.8  -31076   -19048   6244  50000
+## 12    12  caribou  -473.3  -32114   -19897   6410  55000
+## 13    13  caribou  2032.1  -30519   -18211   6474  60000
+## 14    14  caribou  2995.6  -28748   -17087   6160  65000
+## 15    15  caribou  4144.0  -27355   -15840   6148  70000
+## 16    16  caribou  5701.3  -23910   -13217   5872  75000
+## 17    17  caribou  9197.9  -21782   -10758   5997  80000
+## 18    18  caribou 11686.9  -18569    -8083   5758  85000
+## 19    19  caribou 14084.0  -17980    -6743   5812  90000
+## 20    20  caribou 16829.2  -15805    -4934   5864  95000
+## 21    21  caribou 18985.6  -13956    -2621   5785 100000
+```
+
+#### Gazelle PDI Summary
+
+```r
+summary.gazelle
+```
+
+```
+##    rowid pop.type max.pdi min.pdi mean.pdi se.pdi  scale
+## 1      1  gazelle     0.0       0      0.0    0.0      0
+## 2      2  gazelle  5000.0   -2292    447.7 1210.9   5000
+## 3      3  gazelle  3684.7   -1284    980.3 1059.6  10000
+## 4      4  gazelle  -281.3   -4452  -2096.2  783.1  15000
+## 5      5  gazelle -2470.9   -7706  -4651.4  854.1  20000
+## 6      6  gazelle  -256.4   -9679  -4104.6 1617.7  25000
+## 7      7  gazelle  -751.7  -12179  -5305.0 2084.3  30000
+## 8      8  gazelle  -595.5  -11605  -4458.2 2045.0  35000
+## 9      9  gazelle  1122.8  -10776  -3517.3 2126.6  40000
+## 10    10  gazelle  3272.7   -9835  -3161.6 2306.2  45000
+## 11    11  gazelle  3269.0  -10091  -3384.0 2409.8  50000
+## 12    12  gazelle  5402.1   -9819  -2464.7 2714.6  55000
+## 13    13  gazelle  7709.3   -9712  -1014.2 3062.3  60000
+## 14    14  gazelle  5236.6   -9359  -1784.1 2842.2  65000
+## 15    15  gazelle  6850.8   -7725   -425.4 2890.4  70000
+## 16    16  gazelle  8435.5   -6859   -650.7 2922.9  75000
+## 17    17  gazelle  8683.4   -7610  -1126.9 2911.0  80000
+## 18    18  gazelle  8757.4   -7219   -899.8 2839.9  85000
+## 19    19  gazelle 11160.7   -8516  -1285.9 3434.8  90000
+## 20    20  gazelle 10693.7   -7617  -2055.5 3288.5  95000
+## 21    21  gazelle 10792.1   -7148  -2200.6 3316.0 100000
+```
+
+
+#### Guanaco PDI Summary
+
+```r
+summary.guanaco
+```
+
+```
+##    rowid pop.type  max.pdi min.pdi mean.pdi se.pdi scale
+## 1      1  guanaco     0.00       0      0.0    0.0     0
+## 2      2  guanaco   500.00   -1043   -117.4  378.1   500
+## 3      3  guanaco  -543.43   -2781  -1427.4  441.0  1000
+## 4      4  guanaco   -43.43   -3130  -1661.8  599.5  1500
+## 5      5  guanaco  -182.75   -4496  -2767.6  738.5  2000
+## 6      6  guanaco -1280.63   -4692  -3476.4  628.7  2500
+## 7      7  guanaco -2346.61   -5593  -4152.4  589.1  3000
+## 8      8  guanaco -3151.52   -6383  -4700.7  676.3  3500
+## 9      9  guanaco -3168.63   -6581  -4912.1  714.8  4000
+## 10    10  guanaco -2832.90   -7355  -5634.6  795.6  4500
+## 11    11  guanaco -2805.00   -7918  -6110.9  883.9  5000
+## 12    12  guanaco -2305.00   -7959  -6222.4 1014.8  5500
+## 13    13  guanaco -2126.72   -7841  -6325.1 1067.9  6000
+## 14    14  guanaco -1775.26   -8310  -6684.5 1245.2  6500
+## 15    15  guanaco -1601.14   -8307  -6657.8 1280.2  7000
+## 16    16  guanaco -1957.78   -9057  -7131.1 1313.7  7500
+## 17    17  guanaco -1754.82   -9520  -7267.9 1415.7  8000
+## 18    18  guanaco -1399.58   -9955  -7446.7 1542.6  8500
+## 19    19  guanaco -1196.24  -10072  -7334.7 1571.8  9000
+## 20    20  guanaco -1132.43   -9861  -7332.1 1580.6  9500
+## 21    21  guanaco  -763.26  -10373  -7399.2 1700.2 10000
+## 22    22  guanaco  -725.86  -10670  -7381.9 1725.6 10500
+## 23    23  guanaco -1399.80  -11339  -7678.9 1670.6 11000
+## 24    24  guanaco -1480.27  -11064  -7528.8 1605.4 11500
+## 25    25  guanaco -1317.26  -11042  -7316.0 1609.9 12000
+## 26    26  guanaco  -817.26  -10929  -7125.7 1683.4 12500
+## 27    27  guanaco  -449.05  -10730  -6818.1 1702.4 13000
+## 28    28  guanaco  -134.53  -10352  -6502.6 1695.5 13500
+## 29    29  guanaco  -392.56   -9959  -6329.7 1584.4 14000
+## 30    30  guanaco  -246.35   -9588  -6008.6 1543.1 14500
+## 31    31  guanaco   140.25   -9161  -5725.3 1553.7 15000
+```
+
+
+#### Moose PDI Summary
+
+```r
+summary.moose
+```
+
+```
+##    rowid pop.type max.pdi min.pdi mean.pdi se.pdi scale
+## 1      1    moose       0    0.00      0.0    0.0     0
+## 2      2    moose     500 -174.87    236.4  161.5   500
+## 3      3    moose    1000   58.53    625.5  229.3  1000
+## 4      4    moose    1500 -419.92    694.2  434.6  1500
+## 5      5    moose    2000 -457.51    990.6  558.8  2000
+## 6      6    moose    2192 -240.87   1199.2  563.6  2500
+## 7      7    moose    2564  -94.57   1423.0  615.0  3000
+## 8      8    moose    2702 -272.19   1448.6  688.0  3500
+## 9      9    moose    2912 -170.10   1585.1  700.9  4000
+## 10    10    moose    3153 -420.83   1624.1  810.9  4500
+## 11    11    moose    3434 -226.30   1827.0  828.6  5000
+## 12    12    moose    3395 -106.99   1850.4  798.8  5500
+## 13    13    moose    3005   45.75   1790.2  690.9  6000
+## 14    14    moose    2951  269.49   1800.0  588.0  6500
+## 15    15    moose    2974  344.11   1911.9  586.2  7000
+## 16    16    moose    2944  523.03   1923.5  534.0  7500
+## 17    17    moose    2704  580.21   1831.9  448.0  8000
+## 18    18    moose    2437  637.86   1695.1  377.7  8500
+## 19    19    moose    2319  511.90   1577.5  333.0  9000
+## 20    20    moose    2166  517.73   1346.2  266.8  9500
+## 21    21    moose    1958  846.38   1303.2  193.7 10000
+```
+
+
+
+### Plot PDI
+
+```r
 # Create X and Y axes for each species
 
 # caribou
@@ -703,17 +757,17 @@ legend(-1000, -18000, legend = c("Caribou (C)", "M. gazelle (MG)", "Guanaco (G)"
     box.lty = 0, lty = 1, lwd = 3, cex = cexValue, bg = NA)
 ```
 
-<img src="figure/unnamed-chunk-11.png" title="plot of chunk unnamed-chunk-1" alt="plot of chunk unnamed-chunk-1" style="display:block; margin: auto" style="display: block; margin: auto;" />
+<img src="figure/unnamed-chunk-71.png" title="plot of chunk unnamed-chunk-7" alt="plot of chunk unnamed-chunk-7" style="display:block; margin: auto" style="display: block; margin: auto;" />
 
 ```r
 par(mfrow = c(2, 2))
-par(cex = 0.35)
+par(cex = 0.4)
 plot(pdi.index.caribou, col = colorCaribou, linecol = colorCaribou2, title = "Spatial Population Dispersion - Caribou, Kilometers")
 plot(pdi.index.gazelle, col = colorGazelle, linecol = colorGazelle2, title = "Spatial Population Dispersion - Gazelle, Kilometers")
 plot(pdi.index.moose, col = colorMoose, linecol = colorMoose2, title = "Spatial Population Dispersion - Moose, Kilometers")
 plot(pdi.index.guanaco, col = colorGuanaco, linecol = colorGuanaco2, title = "Spatial Population Dispersion - Guanaco, Kilometers")
 ```
 
-<img src="figure/unnamed-chunk-12.png" title="plot of chunk unnamed-chunk-1" alt="plot of chunk unnamed-chunk-1" style="display:block; margin: auto" style="display: block; margin: auto;" />
+<img src="figure/unnamed-chunk-72.png" title="plot of chunk unnamed-chunk-7" alt="plot of chunk unnamed-chunk-7" style="display:block; margin: auto" style="display: block; margin: auto;" />
 
 
