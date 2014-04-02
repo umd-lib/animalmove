@@ -6,7 +6,7 @@ Author: Thomas Mueller <muellert@gmail.com>
 Authors@R: c(person("Thomas Mueller", role = c("aut", "cre"), email =
     "<muellert@gmail.com>"), person("Ellen Aikens", role = c("aut", "cre"),
     email = "<AikensE@si.edu>"), person("Irina Belyaeva", role = c ("cre"),
-    email = "ibelyaev.umd.edu"))
+    email = "ibelyaev@umd.edu"))
 Maintainer: Thomas Mueller <muellert@gmail.com>
 Title: Analysis of animal population-level movement patterns
 Description: animalmove is a package that contains functions to analyze and
