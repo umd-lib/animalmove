@@ -1,9 +1,9 @@
 <!--
 %\VignetteEngine{knitr::docco_classic}
-%\VignetteIndexEntry{An Introduction to the corrplot package}
+%\VignetteIndexEntry{An Introduction to the animalmove package}
 -->
 
-An Introduction to the **'animalmove'** package
+An Introduction to the **animalmove** package
 =======================================
 
 
