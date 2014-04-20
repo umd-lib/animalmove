@@ -25,7 +25,7 @@ exportClasses(Individuals,RMIndex,MCIndex, PDIndex)
 exportMethods(group.by, populations, summary, rmi.index, plot, mci.index, aov, TukeyHSD, kruskal.test, kruskalmc, pdi.index, summary.pdi, polygon)
 
 export(plot)
-
+export(subsample)
 
 #S3 Methods
 S3method(plot, RMIndex)

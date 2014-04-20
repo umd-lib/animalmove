@@ -45,6 +45,15 @@ extractOverlapData <- function(dat,possOlaps,rown,completeSetsOnly=TRUE){
 
 
 s <- Sys.time()
+
+ss <- overlapOverview(dat,start=c("2009-07-20 00:00","2009-07-21 00:00"),end="2010-07-21 00:00",interval=c("25 hours","50 hours"),accuracy=c("3 mins","1 mins"),minIndiv=3,maxIndiv=4,mustIndiv=NULL)
 aa <- extractOverlapData(dat,possOlaps=ss,rown=1,completeSetsOnly=TRUE)
 e <- Sys.time()
 e-s
+
+mciPossOlaps <- overlapOverview(dat,start=c("2009-01-01 00:00"),end="2009-12-31 00:00",interval=c("50 hours"),accuracy=c("3 mins"),minIndiv=3,maxIndiv=4,mustIndiv=NULL)
+mciOlap <- extractOverlapData(dat,possOlaps=mciPossOlaps,rown=1,completeSetsOnly=FALSE)
+
+
+mciPossOlaps <- overlapOverview(dat,start=c("2009-01-01 00:00"),end="2009-12-31 00:00",interval=c("50 hours"),accuracy=c("3 mins"),minIndiv=3,maxIndiv=4,mustIndiv=NULL)
+mciOlap <- extractOverlapData(dat,possOlaps=mciPossOlaps,rown=1,completeSetsOnly=TRUE)

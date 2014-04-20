@@ -120,7 +120,7 @@ plot.RMIndex <- function(x,y, ...){
                , data = df, col = NA,xlim = c(.8,5), 
                cex = cexValue+2,cex.lab = cexValue,cex.axis= cexValue, frame = F,
                vertical = T,ylab = "Realized mobility index", xlab = "Species",
-               ylim = c(0,0.8))
+               ylim = c(0,1.1))
     
     this.x <- jitter(as.integer(factor(as.integer(factor(df$pop.type)))),.3)
     this.y <- df$rmi.index
