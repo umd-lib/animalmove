@@ -3,10 +3,11 @@ animalmove: Analysis of animal population-level patterns in R.
 
 ## Features
 
-* Animal Movement Indices 
-	* Realized Mobility Index
-	* Movement Coordination Index
-	* Population Dispersion Index
+* [Animal Movement Indices](vignettes/IntrotoAnimalMove.md)
+  
+  * Realized Mobility Index
+  * Movement Coordination Index
+  * Population Dispersion Index
 
 ## Installation
 
