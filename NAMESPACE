@@ -26,6 +26,8 @@ exportMethods(group.by, populations, summary, rmi.index, plot, mci.index, aov, T
 
 export(plot)
 export(subsample)
+export(bbox.coordinates)
+export(bbox.scale)
 
 #S3 Methods
 S3method(plot, RMIndex)

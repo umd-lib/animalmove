@@ -132,6 +132,31 @@ compute.Individual.PDI <- function(id, df, polygon, polyscale){
     return (tmpdf)
 }
 
+bbox.coordinates <-function (df, percent = 95,
+                             unin , unout){
+    this.df <- df
+    this.poly <- mcp.population(this.df, percent = percent,
+                                unin = unin, unout = unout)
+    this.poly@bbox
+
+}
+
+bbox.scale <-function (df, percent = 95,
+                             unin , unout){
+    this.df <- df
+    this.poly <- mcp.population(this.df, percent = percent,
+                                unin = unin, unout = unout)
+    xrange <- (this.poly@bbox[1,2] - this.poly@bbox[1,1])/2.0
+    yrange <- (this.poly@bbox[2,2] - this.poly@bbox[2,1])/2.0
+    
+    scale.range <- min(xrange, yrange)
+    scale.step  <- scale.range/20
+    
+    seq(0, scale.range,scale.step)
+   
+}
+
+
 #' Computes Population Dispersion Index for the population
 #' @param object An Individual object that contains species from the same population
 
