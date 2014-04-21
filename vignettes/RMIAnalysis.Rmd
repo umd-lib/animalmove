@@ -107,11 +107,6 @@ head(khulan.reloc.spatial)
 Analysis
 ----------------------------
 
-
-```{r message=FALSE, warning=FALSE}
-xy.rmi.data.spdf <- SpatialPointsDataFrame(xy.sp.rmi.data, dt.rmi.data.attr)
-```
-
 Compute individual mcp
 ```{r message=FALSE, warning=FALSE}
 individual.mcp <- mcp(khulan.reloc.spatial[,1], percent = 100)

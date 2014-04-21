@@ -64,19 +64,19 @@ setMethod("mci.index", signature(object = "Individuals"),
     group.by <- group.by
     time.lag <- time.lag
     
-    index.group.by = grep(group.by, colnames(xy@data))
-    colnames(xy@data)[index.group.by] <- "pop.type"
+    #index.group.by = grep(group.by, colnames(xy@data))
+    #colnames(xy@data)[index.group.by] <- "pop.type"
         
-    index.time.lag = grep(time.lag, colnames(xy@data))
-    colnames(xy@data)[index.time.lag] <- "time.lag"
+    #index.time.lag = grep(time.lag, colnames(xy@data))
+    #colnames(xy@data)[index.time.lag] <- "time.lag"
     
-    if (is.na(group.by) | length(group.by) == 0 | is.na(index.group.by)) {
-        stop("Invalid column mapping for the population type. The data frame should have a column mapped to the population type.")
-    }
+    #if (is.na(group.by) | length(group.by) == 0 | is.na(index.group.by)) {
+     #   stop("Invalid column mapping for the population type. The data frame should have a column mapped to the population type.")
+    #}
     
-    if (is.na(time.lag) | length(time.lag) == 0 | is.na(index.time.lag)) {
-        stop("Invalid column mapping for the time lag. The data frame should have a column mapped to the time lag.")
-    }
+    #if (is.na(time.lag) | length(time.lag) == 0 | is.na(index.time.lag)) {
+     #   stop("Invalid column mapping for the time lag. The data frame should have a column mapped to the time lag.")
+    #}
     
     # save data frame
     df <- as.data.frame(xy)
@@ -85,11 +85,11 @@ setMethod("mci.index", signature(object = "Individuals"),
     abs.distY <- NULL
     X <- NULL
     Y <- NULL
-    pop.type <- NULL
+    #pop.type <- NULL
     
     dt <- data.table(df)
-    dt[, abs.distX:= abs.std.mean(X), by= list(pop.type,time.lag)]
-    dt[, abs.distY:= abs.std.mean(Y), by= list(pop.type,time.lag)]
+    dt[, abs.distX:= abs.std.mean(x), by= list(pop.type,time.lag)]
+    dt[, abs.distY:= abs.std.mean(y), by= list(pop.type,time.lag)]
     dt[, mci.index:= (1.0 - ((abs.distX + abs.distY)/2)), by= list(pop.type,time.lag)]
     dt[,  c("time.lag", "pop.type", "mci.index")]
    
@@ -111,20 +111,20 @@ setMethod("mci.index", signature(object = "Individuals"),
     if (ncol(coordinates(xy))>2)
         stop("xy should be defined in two dimensions")
     
-    group.by = colnames(populations(xy))
-    index.group.by = grep(group.by, colnames(xy@data))
-    colnames(xy@data)[index.group.by] <- "pop.type"
+    #group.by = colnames(populations(xy))
+    #index.group.by = grep(group.by, colnames(xy@data))
+    #colnames(xy@data)[index.group.by] <- "pop.type"
     
-    index.time.lag = grep(time.lag, colnames(xy@data))
-    colnames(xy@data)[index.time.lag] <- "time.lag"
+    #index.time.lag = grep(time.lag, colnames(xy@data))
+    #colnames(xy@data)[index.time.lag] <- "time.lag"
     
-    if (is.na(group.by) | length(group.by) == 0 | is.na(index.group.by)) {
-        stop("Invalid column mapping for the population type. The data frame should have a column mapped to the population type.")
-    }
+    #if (is.na(group.by) | length(group.by) == 0 | is.na(index.group.by)) {
+     #   stop("Invalid column mapping for the population type. The data frame should have a column mapped to the population type.")
+    #}
     
-    if (is.na(time.lag) | length(time.lag) == 0 | is.na(index.time.lag)) {
-        stop("Invalid column mapping for the time lag. The data frame should have a column mapped to the time lag.")
-    }
+#    if (is.na(time.lag) | length(time.lag) == 0 | is.na(index.time.lag)) {
+ #       stop("Invalid column mapping for the time lag. The data frame should have a column mapped to the time lag.")
+  #  }
     
     
     # save data frame
@@ -138,8 +138,8 @@ setMethod("mci.index", signature(object = "Individuals"),
     
     
     dt <- data.table(df)
-    dt[, abs.distX:= abs.std.mean(X), by= list(pop.type,time.lag)]
-    dt[, abs.distY:= abs.std.mean(Y), by= list(pop.type,time.lag)]
+    dt[, abs.distX:= abs.std.mean(x), by= list(pop.type,time.lag)]
+    dt[, abs.distY:= abs.std.mean(y), by= list(pop.type,time.lag)]
     dt[, mci.index:= (1.0 - ((abs.distX + abs.distY)/2)), by= list(pop.type,time.lag)]
     dt[,  c("time.lag", "pop.type", "mci.index")]
     
@@ -280,8 +280,8 @@ summary.MCIndex <- function(object, ...){
         
     df <- as.data.frame(x@data)
     
-    pop.rank <- NULL
-    tmp.rank <- NULL
+    #pop.rank <- NULL
+    #tmp.rank <- NULL
     
     dt <- as.data.table(df)
     dt[,tmp.rank:=max(mci.index),by=pop.type]
