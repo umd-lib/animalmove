@@ -1,6 +1,7 @@
 #' Provides summary of overlapping time intervals
 #' @param dat - input data frame
 #' @export
+#' @author - Martin Rimmler
 #' @rdname Subsampling-methods
 #' @return overlap object
 overlapOverview <- function(dat,start,end,interval,accuracy,minIndiv=1,maxIndiv=NULL,mustIndiv=NULL){
@@ -8,6 +9,9 @@ overlapOverview <- function(dat,start,end,interval,accuracy,minIndiv=1,maxIndiv=
     time <- as.numeric(strptime(dat$time,format="%Y-%m-%d %H:%M:%S",tz="GMT"))
     oTab <- data.frame()
     uu <- list()
+    print(interval)
+    print(accuracy)
+    print(start)
     for(i in interval){
         for(a in accuracy){
             for(s in start){
@@ -43,6 +47,7 @@ overlapOverview <- function(dat,start,end,interval,accuracy,minIndiv=1,maxIndiv=
             }
         }
     }
+    str(oTab)
     sorted <- order(oTab[,1],oTab[,2],oTab[,3],decreasing=TRUE)
     oTab <- oTab[sorted,]
     rownames(oTab) <- 1:nrow(oTab)
@@ -102,7 +107,7 @@ extractOverlapData <- function(dat,possOlaps,rown,completeSetsOnly=TRUE){
 
 subsample <- function(data, startTime, endTime, interval=c("24 hours","48 hours"),accuracy=c("3 mins","1 mins"),minIndiv=3,maxIndiv=4,mustIndiv=NULL, completeSetsOnly=TRUE, index.type){
     
-    poss.overlaps <- overlapOverview(data,start=startTime,end=endTime,interval=interval,accuracy=accuracy,minIndiv=3,maxIndiv=4,mustIndiv=NULL)
+    poss.overlaps <- overlapOverview(dat=data,start=startTime,end=endTime,interval=interval,accuracy=accuracy,minIndiv=minIndiv,maxIndiv=maxIndiv,mustIndiv=mustIndiv)
     
     if (index.type=="mci"){
         completeSets = TRUE

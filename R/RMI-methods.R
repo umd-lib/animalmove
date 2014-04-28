@@ -29,10 +29,10 @@
     new ("RMIndex",  data = df)
 }
 
-compute.RealizedMobilityIndex <- function(xy, percent = 95,
-                                          unin=c("m", "km"),
-                                          unout=c("ha", "km2", "m2"), id) {
-   
+compute.rmi.index <- function(xy, percent = 95,
+                   unin=c("m", "km"),
+                   unout=c("ha", "km2", "m2"), id){
+    
     unin <- match.arg(unin)
     unout <- match.arg(unout)
     id <- id
@@ -40,43 +40,29 @@ compute.RealizedMobilityIndex <- function(xy, percent = 95,
     idcolumnName = id
     index_id = grep(idcolumnName, colnames(xy@data))
     
-    if (is.na(index_id)){
+    if (length(index_id)==0){
         stop("Column Animal Id is missing.")
     }
     
     population.mcp <- mcp.population(xy, percent,
-                               unin = unin,
-                               unout = unout)
+                                     unin = unin,
+                                     unout = unout)
     
-   
-   individual.mcp <- mcp(xy[,index_id ], percent,
+    print(population.mcp)
+    
+    individual.mcp <- mcp(xy[,id], percent,
                           unin = unin,
                           unout = unout)
     
-    tmp1 <- as.data.frame(individual.mcp)
-    tmp2 <- xy@data
-    tmp3 <- as.data.frame(population.mcp@data)
-   
-   columnName = colnames(populations(xy))
-   index = grep(columnName, colnames(tmp2))
-   colnames(tmp2)[colnames(tmp2)==columnName] <- "type"
-   
-    colnames(tmp2)[index_id] <- "id"
-      
-    tmp4 <- sqldf("select tmp1.id, tmp2.type, tmp1.area from tmp1 join tmp2 on tmp1.id=tmp2.id group by tmp1.id")
-       
-    tmp5 <- sqldf("select tmp4.id, tmp4.type, tmp4.area as indhomerange, tmp3.area pophomerange, case when tmp3.area > 0 then tmp4.area/tmp3.area else 0 end as rmiindex from tmp4 left outer join tmp3 on tmp4.type=tmp3.id")
-  
-    colnames(tmp5) <- c("id", "pop.type", "ind.home.range", "pop.home.range", "rmi.index")
-   
-    result <- tmp5
-   
-    options( warn = 0 )
-    return(result)
+     df.ind.area <- as.data.frame(individual.mcp)
+     dt.ind.area <- data.table(df.ind.area)
+             
+     dt<- dt.ind.area[,list(id=id, pop.type=population.mcp@data$id, ind.home.range=area, pop.home.range=population.mcp@data$area, 
+                 rmi.index=as.numeric(area)/as.numeric(population.mcp@data$area))]
     
-   
+     df <- as.data.frame(dt)
+        
 }
-
 
 #'@exportMethod summary
 setMethod("summary", "RMIndex", function(object, ...) {

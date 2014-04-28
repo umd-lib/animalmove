@@ -1,16 +1,45 @@
-"Individuals" =  function(spdf, group.by,... ) {
+"Individuals" =  function(data, id, time, x, y, group.by, proj4string=NULL... ) {
     
-    if (is(spdf, "SpatialPointsDataFrame")){
-        coords = spdf@coords
-        coords.nrs = spdf@coords.nrs
-        data = spdf@data
-        bbox = spdf@bbox
-        proj4string = spdf@proj4string
+    result <- FALSE
+       
+    if (is.data.frame(data)){
+        
+        if (missing(id) || missing(x) || missing(y) || missing (time) || missing (group.by)){
+            stop("Incorrect columns supplied. Required columns are: data, id (individual Id), x and coordinates")
+        }
+        
+        if (!isColumnExists(as.character(id), data)){
+            stop("Column id does not exist in the data frame.")
+        }
+        
+        if (!isColumnExists(as.character(x), data)){
+            stop("Column x does not exist in the data frame.")
+        }
+        
+        if (!isColumnExists(as.character(y),data)){
+            stop("Column x does not exist in the data frame.")
+        }
+        
+        if (!isColumnExists(as.character(time),data)){
+            stop("Column time does not exist in the data frame.")
+        }
+        
+    } else{
+        stop("incorrect data frame supplied. Parameter data should be a data frame with number of rows greater than zero.")
     }
-
-    new ("Individuals", SpatialPointsDataFrame(coords = coords, data = data, coords.nrs = coords.nrs, 
-                                                                       proj4string = proj4string, match.ID = TRUE,
-                                                                                  bbox = bbox), group.by = group.by, ...)
+    
+    # Create spatial points
+    
+    data.xy <- data[, c(x=x,y=y)]
+    attr.columns <- setdiff(colnames(data),colnames(data.xy))
+    data.attr  <- data[,attr.columns]
+      
+    spatial.points <- SpatialPoints(data.xy)
+    spatial.df <- SpatialPointsDataFrame(coords = spatial.points, data = data.attr, 
+                                         proj4string = proj4string, match.ID = TRUE)
+                                         
+    new ("Individuals", spatial.df, group.by = group.by)
+        
 }
 
 setGeneric("group.by", function(this) {
@@ -46,9 +75,11 @@ setMethod("rmi.index", "Individuals",
               
               unin <- match.arg(unin)
               unout <- match.arg(unout)
-              compute.RealizedMobilityIndex(this, percent,
-                                             unin = unin,
-                                             unout = unout, id)
+                       
+              index <- compute.rmi.index(this, percent,
+                                            unin = unin,
+                                            unout = unout, id=id)
+             RMIndex(index)
           }
 )
 
@@ -71,3 +102,79 @@ as.data.frame.IndividualsDataFrame = function(x, ...)  {
 
 setAs("Individuals", "data.frame", function(from)
     as.data.frame.IndividualsDataFrame(from))
+
+
+#'
+#' @description
+#' \code{print.Individuals} 
+#'
+#' @details
+#' This function prints Individuals
+#' by the \code{\link{mc}} function.
+#'
+#' @param x an object of class \code{Individuals}.
+#' @param ... additional arguments passed to the function.
+#' @method print Inidividuals
+#' @export
+#' @return the input object is returned silently.
+#' @author 
+#' @examples
+#' print(Inidviduals)
+.print.Individuals <- function(x, ...){
+    if (!inherits(x, "Individuals")) #1
+        stop("Object must be of class 'Individuals'")
+    
+    print("coordinates names:")
+    cat(coordnames(x), "\n")
+    cat("...........", "\n")
+    print("bbox:")
+    bbox(x)
+ }
+
+#'@exportMethod show.mcp
+setGeneric("show.mcp", function(x, percent = 95, unin=c("m", "km"),
+                                unout=c("ha", "km2", "m2"), id) {
+    standardGeneric("show.mcp")
+})
+
+setMethod("show.mcp", "Individuals",
+          function(x, percent = 95, unin=c("m", "km"),
+                   unout=c("ha", "km2", "m2"), id) {
+              
+              unin <- match.arg(unin)
+              unout <- match.arg(unout)
+              
+              .show.mcp(x, percent = percent,
+                        unin=unin, unout=unout, id)
+          }
+)
+
+.show.mcp <- function(x, percent = 95, unin=c("m", "km"),
+                      unout=c("ha", "km2", "m2"), id){
+    if (!inherits(x, "Individuals")) #1
+        stop("Object must be of class 'Individuals'")
+        
+    individual.mcp <- mcp(x[,id], percent = percent,
+                          unin=unin, unout=unout)
+    
+    print("Individual MCPs:")
+    print(individual.mcp)
+    
+    print("Population MCPs:")
+    population.mcp <- mcp.area.population(x, percent = percent,
+                                          unin=unin,
+                                          unout=unout)
+    print(population.mcp)
+    
+}
+
+#' Print Indviduals object
+#' @param Inidviduals
+#' @rdname Individuals
+#' @exportMethod
+setMethod("print", signature(x="Individuals"),
+          function(x){
+              
+              .print.Individuals(x)
+          }
+)

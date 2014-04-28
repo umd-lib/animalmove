@@ -8,6 +8,8 @@ guanaco<-read.csv("/apps/git/animalmove/misc/originaldata/16_day_5_individuals_d
 # Copy caribou data to the data table
 dt.caribou <- data.table(caribou)
 
+load("/apps/git/animalmove/misc/originaldata/martin/khulanData.Rdata")
+
 # Create attribute data frame
 dt.caribou.attr <- dt.caribou[, list(id=uniqueID, pop.type="caribou", x=xAlaskaAlb*1000,y=caribou$yAlaskaAlb*1000, time.lag=daysToFind )]
 
@@ -37,11 +39,10 @@ dt.guanaco <- data.table(guanaco)
 dt.guanaco.attr <- dt.guanaco[, list(id=uniqueID, pop.type="guanaco", x=xm*1000, y=ym*1000, time.lag=daysToFind)]
 allpopulations <- rbind(dt.caribou.attr, dt.gazelle.attr, dt.moose.attr, dt.guanaco.attr)
 
-allpopulations.mci <- rbind(dt.caribou.attr, dt.gazelle.attr, dt.moose.attr)
 
 # save data
 
-save(allpopulations, file="/apps/git/animalmove/data/allpopulations.mci.rda")
+#save(allpopulations, file="/apps/git/animalmove/data/allpopulations.rda")
 
 # Create spatial coordinates
 

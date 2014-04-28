@@ -41,6 +41,8 @@ str(xy.caribou.spdf)
 # Create Individuals data.frame - relocations of caribou data
 xy.caribou.spdf.reloc <- Individuals(xy.caribou.spdf, group.by="pop.type")
 
+car <- mcp.population(xy.caribou.spdf.reloc, percent = 100)
+
 str(xy.caribou.spdf.reloc)
 
 caribou.scale = seq(0,100000,5000) #caribou and gazelles
