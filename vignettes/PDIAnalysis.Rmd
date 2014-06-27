@@ -6,13 +6,6 @@
 Population Dispersion Index
 =======================================
 
-**[Khulan Data](#khulan-data)**
-
-**[Original Article Data](#original)**
-
-## <a name="#khulan-data"></a>Khulan Data
--------------------------------------------
-
 ```{r setup, include=FALSE}
 library(knitr)
 opts_chunk$set(out.extra='style="display:block; margin: auto"', fig.align="center")
@@ -20,107 +13,61 @@ opts_chunk$set(out.extra='style="display:block; margin: auto"', fig.align="cente
 
 Load package library
 ```{r results='hide', message=FALSE, warning=FALSE}
+library(lubridate)
 library(animalmove)
+library(plyr)
+library(ggplot2)
+
 ```
 
 Subsample Data
 ------------
 
-Khulan dataset has been saved in the package data directory , and loaded on the package load.
+Buffalo dataset has been saved in the package data directory , and loaded on the package load.
 
-Raw **khulan** dataset contains unlaltered original data.
-
-```{r message=FALSE, warning=FALSE}
-data(khulan.raw.data)
-head(khulan.raw.data)
-```
-
-Number of rows in the khulan.raw.data
-```{r message=FALSE, warning=FALSE}
-nrow(khulan.raw.data)
-```
-
-
-For demonstration purposes we add a column that indicates a specie type to the data frame for each relocation data.
-
-Enhanced dataset has been saved into khulan.test.data a column pop.type, which indicates a specie type.
-
-Specie type assignment rule:  Individuals with ids 3,4,7, 6441 assigned to the specie1 type, and the rest is identified as specie2 type.
+Raw **buffalo** dataset contains unaltered original data.
 
 ```{r message=FALSE, warning=FALSE}
-data(khulan.test.data)
-head(khulan.test.data)
+
+data(buffalo)
+head(buffalo)
+
+nrow(buffalo)
+
+currentnames <- colnames(buffalo)
+currentnames
+
+names(buffalo)[names(buffalo)=="timestamp"] <- "time"
+names(buffalo)[names(buffalo)=="utm.easting"] <- "x"
+names(buffalo)[names(buffalo)=="utm.northing"] <- "y"
+names(buffalo)[names(buffalo)=="tag.local.identifier"] <- "id"
+names(buffalo)[names(buffalo)=="individual.taxon.canonical.name"] <- "pop.type"
+
+# Data Conversion
+buffalo$time <- as.POSIXct(strptime(buffalo$time,format="%Y-%m-%d %H:%M",tz="GMT"))
+
+#Display new names
+newnames <- colnames(buffalo)
+newnames
+head(buffalo)
 ```
 
-Number of rows in the khulan.test.data
-
+Number of rows in the buffalo data & data set structure 
 ```{r message=FALSE, warning=FALSE}
-nrow(khulan.test.data)
+length(table((buffalo$id)))
+
+str(buffalo)
 ```
+
 
 ### Subsample data within time interval
 --------------------------------------
 
 We select at most 6 individuals within 2009, time interval 50 hours, and accuracy 50 hours, and subsampling scheme for Realized Mobility Index
 ```{r message=FALSE, warning=FALSE}
-pdi.data <- subsample(khulan.test.data, start=c("2009-01-01 00:00"),end="2009-12-31 00:00",interval=c("50 hours"),accuracy=c("3 mins"),minIndiv=3,maxIndiv=6,mustIndiv=NULL,index.type="pdi")
+pdi.subsample.data <- subsample(dat=buffalo, start=c("2005-02-17 00:00:00"),end="2006-12-31 00:00:00",interval=c("50 hours"),accuracy=c("3 hours"),minIndiv=3,maxIndiv=6,mustIndiv=NULL,index.type="pdi")
 
-head(pdi.data)
-```
-
-Note, a number of rows in the pdi subsample dataset
-
-```{r message=FALSE, warning=FALSE}
-nrow(pdi.data)
-```
-
-### Prepare data for the analysis in the spatial form
-----------------------------
-
-Create attribute data frame
-
-```{r message=FALSE, warning=FALSE}
-dt.pdi.data <- data.table(pdi.data)
-
-dt.pdi.data.attr  <- dt.pdi.data[,list(id=id, pop.type=pop.type, x=X,y=Y, time=time, time.lag=time.lag, age=age, elevation= elevation, behaviour = behaviour)]
-str(dt.pdi.data.attr)
-```
-
-Subset species1 & species2
-```{r message=FALSE, warning=FALSE}
-# Subset species 1
-dt.pdi.data.species1 <- dt.pdi.data.attr[pop.type=="species1"]
-
-# Subset species 2
-dt.pdi.data.species2 <- dt.pdi.data.attr[pop.type=="species2"]
-```
-
-Create spatial coordinates
-```{r message=FALSE, warning=FALSE}
-dt.pdi.data.specie1.xy <- dt.pdi.data.species1[, list(x,y)]
-
-# Create spatial coordinates - Specie2
-dt.pdi.data.specie2.xy <- dt.pdi.data.species2[, list(x,y)]
-```
-
-Create spatial points
-```{r message=FALSE, warning=FALSE}
-xy.sp.pdi.data.specie1 <- SpatialPoints(dt.pdi.data.specie1.xy)
-xy.sp.pdi.data.specie2 <- SpatialPoints(dt.pdi.data.specie2.xy)
-```
-
-Create spatial points data frame with attributes
-```{r message=FALSE, warning=FALSE}
-xy.pdi.data.spdf.specie1 <- SpatialPointsDataFrame(xy.sp.pdi.data.specie1, dt.pdi.data.species1)
-xy.pdi.data.spdf.specie2 <- SpatialPointsDataFrame(xy.sp.pdi.data.specie2, dt.pdi.data.species2)
-```
-
-Create Individuals data.frame - relocations of khulan data
-```{r message=FALSE, warning=FALSE}
-khulan.reloc.specie1.spatial <- Individuals(xy.pdi.data.spdf.specie1, group.by="pop.type")
-khulan.reloc.specie2.spatial <- Individuals(xy.pdi.data.spdf.specie2, group.by="pop.type")
-head(khulan.reloc.specie1.spatial)
-head(khulan.reloc.specie2.spatial)
+buffalo.indiv <- Individuals(pdi.subsample.data, id="id", time="time", x="x", y="y", group.by="pop.type", proj4string= CRS("+proj=utm +zone=28 +datum=WGS84"))
 ```
 
 Analysis
@@ -130,52 +77,32 @@ Analysis
 ---------------------------------------------
 
 ```{r message=FALSE, warning=FALSE}
-bbox.coord1<- bbox.coordinates(khulan.reloc.specie1.spatial, percent = 100, unin = "m", unout = "km2")
+bbox.coord1<- bbox.coordinates(buffalo.indiv, percent = 100, unin = "m", unout = "km2")
 bbox.coord1
 
-specie1.scale <- bbox.scale(khulan.reloc.specie1.spatial, percent = 100, unin = "m", unout = "km2")
+specie1.scale <- bbox.scale(buffalo.indiv, percent = 100, unin = "m", unout = "km2")
 specie1.scale
+
 ```
 
 ## Specie1 polygon
 ---------------------------------------------
 ```{r message=FALSE, warning=FALSE}
-specie1.poly <- mcp.population(khulan.reloc.specie1.spatial, percent = 100)
+specie1.poly <- mcp.population(buffalo.indiv, percent = 100)
+specie1.poly
 
 color = "green"
 
 plot(specie1.poly, col = color, axes = TRUE)
-points(khulan.reloc.specie1.spatial, pch=3)
-title(main="Specie1", xlab="X", ylab="Y")
-```
-
-## Display bounding box and scale for Specie2
----------------------------------------------
-
-```{r message=FALSE, warning=FALSE}
-bbox.coord2<- bbox.coordinates(khulan.reloc.specie2.spatial, percent = 100, unin = "m", unout = "km2")
-bbox.coord2
-
-specie2.scale <- bbox.scale(khulan.reloc.specie2.spatial, percent = 100, unin = "m", unout = "km2")
-specie2.scale
-```
-
-## Specie2 polygon
----------------------------------------------
-```{r message=FALSE, warning=FALSE}
-specie2.poly <- mcp.population(khulan.reloc.specie2.spatial, percent = 100)
-
-plot(specie2.poly, col = color, axes = TRUE)
-points(khulan.reloc.specie1.spatial, pch=3)
-title(main="Specie2", xlab="X", ylab="Y")
+points(buffalo.indiv, pch=3)
+title(main="Syncerus caffer", xlab="X", ylab="Y")
 ```
 
 ## Compute PDI for each specie
 ----------------------------------
 
 ```{r message=FALSE, warning=FALSE}
-pdi.index.specie1 <- pdi.index(khulan.reloc.specie1.spatial, percent = 100, specie1.scale, unin = "m", unout = "km2")
-pdi.index.specie2 <- pdi.index(khulan.reloc.specie2.spatial, percent = 100, specie2.scale, unin = "m", unout = "km2")
+pdi.index.specie1 <- pdi.index(buffalo.indiv, percent = 100, specie1.scale, unin = "m", unout = "km2")
 ```
 
 ### Compute summaries of each specie PDI
@@ -183,9 +110,6 @@ pdi.index.specie2 <- pdi.index(khulan.reloc.specie2.spatial, percent = 100, spec
 ```{r message=FALSE, warning=FALSE}
 summary.specie1 <- summary.pdi(pdi.index.specie1)
 summary.specie1
-
-summary.specie2 <- summary.pdi(pdi.index.specie2)
-summary.specie2
 ```
 
 ### Plot PDI
@@ -194,247 +118,30 @@ summary.specie2
 colorSpecie1 = "pink" 
 altColorSpecie1 = "red"
 
-colorSpecie2 = "lightblue"
-altColorSpecie2 = "blue"
-
-plot(pdi.index.specie1, col = colorSpecie1, linecol = altColorSpecie1, title = "Spatial Population Dispersion - Specie1, Kilometers")
-plot(pdi.index.specie2, col = colorSpecie2, linecol = altColorSpecie2, title = "Spatial Population Dispersion - Specie2, Kilometers")
+plot(pdi.index.specie1, col = colorSpecie1, linecol = altColorSpecie1, title = "Syncerus caffer")
 
 ```
 
-## <a name="#original"></a>Original Article Data
-------------------------------------------------
-
-### Load Caribou, Gazelle, Moose, Guanaco data
------------------------------------------------
+### Extra Plotting
+------------------------------------
 ```{r message=FALSE, warning=FALSE}
-data(caribou.reloc.16day.5indiv)
-data(gazelle.reloc.16day.5indiv)
-data(moose.reloc.16day.5indiv)
-data(guanaco.reloc.16day.5indiv)
+library(RColorBrewer)
+g = 11
+my.cols <- rev(brewer.pal(g, "RdYlBu"))
 ```
 
-### Load Caribou, Gazelle, Moose, Guanaco data
------------------------------------------------
+#### Smooth scatter 
 ```{r message=FALSE, warning=FALSE}
-caribou.scale = seq(0,100000,5000) 
-gazelle.scale = caribou.scale
-moose.scale = seq(0,10000,500) 
-guanaco.scale = seq(0,15000,500) 
+require(KernSmooth)
+smoothScatter(pdi.subsample.data$location.long, pdi.subsample.data$location.lat, nrpoints=.3*100000, colramp=colorRampPalette(my.cols), pch=19, cex=.3, col = "green1")
 ```
 
-### Compute PDI for each specie
------------------------------------------------
+#### Kernel density using MASS 
 ```{r message=FALSE, warning=FALSE}
-pdi.index.caribou <- pdi.index(caribou.reloc.16day.5indiv, percent = 100, caribou.scale, unin = "m", unout = "km2")
-pdi.index.gazelle <- pdi.index(gazelle.reloc.16day.5indiv, percent = 100, gazelle.scale, unin = "m", unout = "km2")
-pdi.index.guanaco <- pdi.index(guanaco.reloc.16day.5indiv, percent = 100, guanaco.scale, unin = "m", unout = "km2")
-pdi.index.moose <- pdi.index(moose.reloc.16day.5indiv, percent = 100,   moose.scale, unin = "m", unout = "km2")
-```
-### Compute summaries of each specie PDI
------------------------------------------------
-```{r message=FALSE, warning=FALSE}
-summary.caribou <- summary.pdi(pdi.index.caribou)
-summary.gazelle <- summary.pdi(pdi.index.gazelle)
-summary.guanaco <- summary.pdi(pdi.index.guanaco)
-summary.moose <- summary.pdi(pdi.index.moose)
-```
-
-### PDI Index Summaries
-------------------------------------------------
-
-#### Caribou PDI Summary
-------------------------------------------------
-```{r}
-summary.caribou
-```
-#### Gazelle PDI Summary
-------------------------------------------------
-```{r}
-summary.gazelle
-```
-
-#### Guanaco PDI Summary
-------------------------------------------------
-```{r}
-summary.guanaco
-```
-
-#### Moose PDI Summary
-------------------------------------------------
-```{r}
-summary.moose
-```
-
-### Plot polygons
-------------------------------------------------
-```{r}
-par(mfrow=c(2,2), oma=c(0,0,2,0))
-```
-
-#### Caribou polygon
-------------------------------------------------
-```{r}
-caribou.poly <- mcp.population(caribou.reloc.16day.5indiv, percent = 100, unin = "m", unout = "km2")
-caribou.poly
-
-caribou.poly
-head(caribou.poly)
-
-plot(caribou.poly, col = color, axes=TRUE)
-points(caribou.reloc.16day.5indiv, pch=3)
-title(main="Caribou", xlab="X", ylab="Y")
-```
-
-#### Caribou area
-------------------------------------------------
-```{r message=FALSE, warning=FALSE}
-caribou.area <- mcp.area.population(caribou.reloc.16day.5indiv, percent = 100, plotit = FALSE)
-caribou.area
-```
-
-#### Gazelle polygon
-------------------------------------------------
-```{r}
-gazelle.poly <- mcp.population(gazelle.reloc.16day.5indiv, percent = 100, unin = "m", unout = "km2")
-gazelle.poly
-
-gazelle.poly
-head(gazelle.poly)
-
-plot(gazelle.poly, col = color, axes=TRUE)
-points(gazelle.reloc.16day.5indiv, pch=3)
-title(main="Gazelle", xlab="X", ylab="Y")
-```
-
-#### Gazelle area
-------------------------------------------------
-```{r message=FALSE, warning=FALSE}
-gazelle.area <- mcp.area.population(gazelle.reloc.16day.5indiv, percent = 100, plotit = FALSE)
-gazelle.area
-```
-
-#### Moose polygon
-------------------------------------------------
-```{r}
-moose.poly <- mcp.population(moose.reloc.16day.5indiv, percent = 100, unin = "m", unout = "km2")
-moose.poly
-
-moose.poly
-head(moose.poly)
-
-plot(moose.poly, col = color, axes=TRUE)
-points(moose.reloc.16day.5indiv, pch=3)
-title(main="Moose", xlab="X", ylab="Y")
-```
-
-#### Moose area
-------------------------------------------------
-```{r message=FALSE, warning=FALSE}
-moose.area <- mcp.area.population(moose.reloc.16day.5indiv, percent = 100, plotit = FALSE)
-moose.area
-```
-
-#### Guanaco polygon
-------------------------------------------------
-```{r}
-guanaco.poly <- mcp.population(guanaco.reloc.16day.5indiv, percent = 100, unin = "m", unout = "km2")
-guanaco.poly
-
-guanaco.poly
-head(guanaco.poly)
-
-plot(guanaco.poly, col = color, axes=TRUE)
-points(guanaco.reloc.16day.5indiv, pch=3)
-title(main="Guanaco", xlab="X", ylab="Y")
-```
-
-#### Guanaco area
-------------------------------------------------
-```{r message=FALSE, warning=FALSE}
-guanaco.area <- mcp.area.population(guanaco.reloc.16day.5indiv, percent = 100, plotit = FALSE)
-guanaco.area
-```
-
-
-### Plot PDI
-```{r}
-# Create X and Y axes for each species
-
-# caribou
-caribou.X <- c(summary.caribou$scale, rev(summary.caribou$scale))
-caribou.Y <- c(summary.caribou$mean.pdi + summary.caribou$se.pdi, rev(summary.caribou$mean.pdi - summary.caribou$se.pdi))
-
-# gazelle
-gazelle.X <- c(summary.gazelle$scale, rev(summary.gazelle$scale))
-gazelle.Y <- c(summary.gazelle$mean.pdi + summary.gazelle$se.pdi, rev(summary.gazelle$mean.pdi - summary.gazelle$se.pdi))
-
-# guanaco
-guanaco.X <- c(summary.guanaco$scale, rev(summary.guanaco$scale))
-guanaco.Y <- c(summary.guanaco$mean.pdi + summary.guanaco$se.pdi, rev(summary.guanaco$mean.pdi - summary.guanaco$se.pdi))
-
-# moose
-moose.X <- c(summary.moose$scale, rev(summary.moose$scale))
-moose.Y <- c(summary.moose$mean.pdi + summary.moose$se.pdi, rev(summary.moose$mean.pdi - summary.moose$se.pdi))
-
-
-# Plot default settings
-
-colorCaribou = "pink" 
-colorGazelle = "lightblue"
-colorGuanaco = "khaki1"#"#FFFF99"
-colorMoose = "lightgreen"
-colorCaribou2 = "red" 
-colorGazelle2 = "blue"
-colorGuanaco2 =  "darkorange"
-colorMoose2 = "darkgreen"
-
-cexValue = 2
-
-cexValue = 1
-
-# Change number of panels in the plotting window back to a single panel
-par(mfrow=c(1,1))
-
-# Change margin size 
-#par(mar = c(5, 5, 2, 1)) 
-
-# Create empty plot, with axes labels
-plot(caribou.scale, summary.gazelle$mean.pdi, ylim = c(-25000,5000), xlim = c(0,50000), col = NA,  
-     ylab = "Population Dispersion Index", xlab = "lag (km)",
-     cex.lab = cexValue, cex.axis = cexValue,cex = cexValue, axes = F)
-
-#Add caribou data
-polygon(caribou.X, caribou.Y, col = colorCaribou, border = NA) # plots CI's
-
-#Add gazelle data
-polygon(gazelle.X, gazelle.Y, col = colorGazelle, border = NA) # plots CI's
-
-# Add Moose data
-polygon(moose.X, moose.Y, col = colorMoose, border = NA) # plots CI's
-
-# Add guanaco data
-polygon(guanaco.X, guanaco.Y, col = colorGuanaco, border = NA) # plots CI's
-
-
-# Add lines
-lines(summary.caribou$scale,summary.caribou$mean.pdi,col = colorCaribou2, lwd = 2) # plots PDI
-lines(summary.gazelle$scale,summary.gazelle$mean.pdi,col = colorGazelle2, lwd = 2) # plots PDI
-lines(summary.moose$scale,summary.moose$mean.pdi,col = colorMoose2, lwd = 2) # plots PDI
-lines(summary.guanaco$scale,summary.guanaco$mean.pdi,col = colorGuanaco2, lwd = 2) # plots PDI
-
-
-lines(c(0,100000),c(0,0),lwd = 2, lty = 1) # add baseline
-
-#Add axes
-axis(1, at=seq(0,50000,10000),labels = seq(0,50,10), cex.axis = cexValue)
-axis(2,at = seq(-25000,5000,10000), cex.axis= cexValue)
-
-#Add legend
-legend(-1000,-18000, legend = c("Caribou (C)", "M. gazelle (MG)", "Guanaco (G)","Moose (M)"), col = c( colorCaribou2,colorGazelle2, colorGuanaco2,colorMoose2),        box.lty= 0,lty = 1, lwd = 3, cex = cexValue, bg = NA)
-
-plot(pdi.index.caribou, col = colorCaribou, linecol = colorCaribou2, title = "Spatial Population Dispersion - Caribou, Kilometers")
-plot(pdi.index.gazelle, col = colorGazelle, linecol = colorGazelle2, title = "Spatial Population Dispersion - Gazelle, Kilometers")
-plot(pdi.index.moose, col = colorMoose, linecol = colorMoose2, title = "Spatial Population Dispersion - Moose, Kilometers")
-plot(pdi.index.guanaco, col = colorGuanaco, linecol = colorGuanaco2, title = "Spatial Population Dispersion - Guanaco, Kilometers")
+library(MASS)
+z <- kde2d(pdi.subsample.data$location.long, pdi.subsample.data$location.lat, n=50)
+plot(pdi.subsample.data$location.long, pdi.subsample.data$location.lat, xlab="X", ylab="Y", pch=19, cex=.3, col = "gray60")
+contour(z, drawlabels=FALSE, nlevels=g, col=my.cols, add=TRUE, lwd = 2)
+abline(h=mean(pdi.subsample.data$location.long), v=mean(pdi.subsample.data$location.lat), lwd=2, col = "black")
+legend("topleft", paste("r=", round(cor(pdi.subsample.data$location.long, pdi.subsample.data$location.lat),2)), bty="n")
 ```

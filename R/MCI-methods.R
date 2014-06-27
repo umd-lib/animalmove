@@ -9,12 +9,10 @@ abs.std.mean <- function(x){
     # add check for that
     
     len <- length(x)
-    x <- data.table(x)
-    abs.dist.mean <- x[,list (vector.mean=sum(abs(x - mean(x))), mean = mean(abs(x)))]
-    sum.abs.vector.mean <- abs.dist.mean[,1, with = FALSE]
-    abs.mean <- abs.dist.mean[,2, with = FALSE]
-    sum.abs.vector.mean <- sum.abs.vector.mean[1]/len
-    abs.std.mean <- sum.abs.vector.mean/abs.mean
+    mean.abs <- mean(abs(x))
+    abs.mean.diff.x <- sum(abs(x - mean(x)))
+    sum.abs.vector.mean <- abs.mean.diff.x/len
+    abs.std.mean <- sum.abs.vector.mean/mean.abs
     
     return (abs.std.mean)
     
@@ -34,6 +32,8 @@ setMethod("mci.index", signature(object = c("SpatialPointsDataFrame")),
               
               mci.index <- .mci.spatial.index.SpatialPointsDataFrame (object, group.by, time.lag, ... )
               
+              return(MCIndex(mci.index))
+              
        }          
 )
 
@@ -45,7 +45,8 @@ setMethod("mci.index", signature(object = "Individuals"),
               
               mci.index <- .mci.spatial.index.IndividualsDataFrame (object, time.lag, ... )
               
-              return (mci.index)
+              return(MCIndex(mci.index))
+        
           }          
 )
 
@@ -81,20 +82,14 @@ setMethod("mci.index", signature(object = "Individuals"),
     # save data frame
     df <- as.data.frame(xy)
     
-    abs.distX <- NULL
-    abs.distY <- NULL
-    X <- NULL
-    Y <- NULL
-    #pop.type <- NULL
-    
     dt <- data.table(df)
-    dt[, abs.distX:= abs.std.mean(x), by= list(pop.type,time.lag)]
-    dt[, abs.distY:= abs.std.mean(y), by= list(pop.type,time.lag)]
-    dt[, mci.index:= (1.0 - ((abs.distX + abs.distY)/2)), by= list(pop.type,time.lag)]
-    dt[,  c("time.lag", "pop.type", "mci.index")]
-   
+    dt[, abs.distX:= abs.std.mean(x), by= list(id)]
+    dt[, abs.distY:= abs.std.mean(y), by= list(id)]
+    dt[, mci.index:= (1.0 - ((abs.distX + abs.distY)/2)), by= list(id)]
+    dt[,  c("id" ,"pop.type", "mci.index")]
+    
     df <- as.data.frame(dt)
-    df <- df[,c("time.lag", "pop.type", "mci.index")]
+    df <- df[,c("scantimes", "id", "pop.type", "mci.index")]
     
     return (df)
 }
@@ -130,21 +125,14 @@ setMethod("mci.index", signature(object = "Individuals"),
     # save data frame
     df <- as.data.frame(xy)
     
-    abs.distX <- NULL
-    abs.distY <- NULL
-    X <- NULL
-    Y <- NULL
-    pop.type <- NULL
-    
-    
     dt <- data.table(df)
-    dt[, abs.distX:= abs.std.mean(x), by= list(pop.type,time.lag)]
-    dt[, abs.distY:= abs.std.mean(y), by= list(pop.type,time.lag)]
-    dt[, mci.index:= (1.0 - ((abs.distX + abs.distY)/2)), by= list(pop.type,time.lag)]
-    dt[,  c("time.lag", "pop.type", "mci.index")]
+    dt[, abs.distX:= abs.std.mean(x), by= list(id)]
+    dt[, abs.distY:= abs.std.mean(y), by= list(id)]
+    dt[, mci.index:= (1.0 - ((abs.distX + abs.distY)/2)), by= list(id)]
+    dt[,  c("id" ,"pop.type", "mci.index")]
     
     df <- as.data.frame(dt)
-    df <- df[,c("time.lag", "pop.type", "mci.index")]
+    df <- df[,c("scantimes", "id", "pop.type", "mci.index")]
     
     return (df)
 }
@@ -167,6 +155,10 @@ setMethod("aov", signature(formula = "MCIndex", data = "missing", projections = 
 aov.mci <- function (formula, data = NULL, projections = FALSE, qr = TRUE,
     contrasts = NULL, print = FALSE){
     
+    if (!.isMultiPopulation(formula)){
+        stop("Cannot perform ANOVA test on a single population. Number of populations should be greater than 0.")
+    }
+    
     print <- print
     object <- formula
     data <- object@data
@@ -188,6 +180,10 @@ aov.mci <- function (formula, data = NULL, projections = FALSE, qr = TRUE,
 setMethod("TukeyHSD", signature(x = "MCIndex", which = "missing"),
           function(x, which, ...){
               
+              if (!.isMultiPopulation(x)){
+                  stop("Cannot perform TukeyHSD test on a single population. Number of populations should be greater than 0.")
+              }
+              
               model <- aov(x)
               result <- TukeyHSD(model)
               
@@ -202,6 +198,10 @@ setMethod("TukeyHSD", signature(x = "MCIndex", which = "missing"),
 #' @exportMethod
 setMethod("kruskal.test", signature(x = "MCIndex"),
           function(x, ...){
+              
+              if (!.isMultiPopulation(x)){
+                  stop("Cannot perform Kruskal test on a single population. Number of populations should be greater than 0.")
+              }
               
               object <- x
               species <- as.factor(object@data$pop.type)
@@ -221,6 +221,10 @@ setMethod("kruskal.test", signature(x = "MCIndex"),
 #' @exportMethod
 setMethod("kruskalmc", signature(resp = "MCIndex"),
           function(resp, ...){
+              
+              if (!.isMultiPopulation(resp)){
+                  stop("Cannot perform Kruskal Multiple Comaprison on a single population. Number of populations should be greater than 0.")
+              }
               
               object <- resp
               species <- as.factor(object@data$pop.type)
@@ -248,6 +252,10 @@ summary.MCIndex <- function(object, ...){
         stop("Invalid object type. Expected MCIndex.")
     }
     
+    if (!.isMultiPopulation(object)){
+        stop("Cannot perform multiple comparison tests on a single population. Number of populations should be greater than 0.")
+    }
+    
     print(summary(aov(object)))
     
     print(TukeyHSD(object))
@@ -261,7 +269,25 @@ summary.MCIndex <- function(object, ...){
     
 }
 
-
+#'@exportMethod summary
+setMethod("summary", "MCIndex", function(object, ...) {
+    if (!inherits(object, "MCIndex")){
+        stop("Invalid object type. Expected MCIndex.")
+    }
+    
+    if (!.isMultiPopulation(object)){
+        stop("Cannot perform multiple comparison tests on a single population. Number of populations should be greater than 0.")
+    }
+    
+    print(summary(aov(object)))
+    
+    print(TukeyHSD(object))
+    
+    print(kruskal.test(object))
+    
+    print(kruskalmc(object))
+      
+}  )
 
 .plot.MCIndex <- function(x, ..., range = 1.5, width = NULL, varwidth = FALSE,
                           notch = FALSE, outline = TRUE, names, plot = TRUE,
@@ -307,7 +333,7 @@ summary.MCIndex <- function(object, ...){
         border <- df$bgcolor
     }
     
-    boxplot(mci.index ~ pop.type, data = df, 
+    boxplot(mci.index ~ factor(pop.type), data = df, 
             col= col, 
             border = border,
             outline = F, lwd=2, boxwex = .5, cex = cexValue, cex.lab = cexValue,
@@ -336,3 +362,13 @@ as.data.frame.MCIndex = function(x, ...)  {
 #' @exportMethod
 setAs("MCIndex", "data.frame", function(from)
     as.data.frame.MCIndex(from))
+
+
+.isMultiPopulation <- function(object){
+    
+    if (!length(unique(object@data$pop.type)) == 1){
+       return (TRUE)
+    }else{
+        return (FALSE)
+    }
+}

@@ -6,7 +6,6 @@
 Realized Mobility Index
 =======================================
 
-
 ```{r setup, include=FALSE}
 library(knitr)
 opts_chunk$set(out.extra='style="display:block; margin: auto"', fig.align="center")
@@ -14,146 +13,118 @@ opts_chunk$set(out.extra='style="display:block; margin: auto"', fig.align="cente
 
 Load package library
 ```{r results='hide', message=FALSE, warning=FALSE}
+library(lubridate)
 library(animalmove)
+library(plyr)
 ```
 
 Subsample Data
 ------------
 
-Khulan dataset has been saved in the package data directory , and loaded on the package load.
+Buffalo dataset has been saved in the package data directory , and loaded on the package load.
 
-Raw **khulan** dataset contains unlaltered original data.
-
-```{r message=FALSE, warning=FALSE}
-data(khulan.raw.data)
-head(khulan.raw.data)
-```
-
-Number of rows in the khulan.raw.data
-```{r message=FALSE, warning=FALSE}
-nrow(khulan.raw.data)
-```
-
-
-For demonstration purposes we add a column that indicates a specie type to the data frame for each relocation data.
-
-Enhanced dataset has been saved into khulan.test.data a column pop.type, which indicates a specie type.
-
-Specie type assignment rule:  Individuals with ids 3,4,7, 6441 assigned to the specie1 type, and the rest is identified as specie2 type.
+Raw **buffalo** dataset contains unaltered original data.
 
 ```{r message=FALSE, warning=FALSE}
-data(khulan.test.data)
-head(khulan.test.data)
+
+data(buffalo)
+head(buffalo)
+
+nrow(buffalo)
+
+currentnames <- colnames(buffalo)
+currentnames
+
+names(buffalo)[names(buffalo)=="timestamp"] <- "time"
+names(buffalo)[names(buffalo)=="utm.easting"] <- "x"
+names(buffalo)[names(buffalo)=="utm.northing"] <- "y"
+names(buffalo)[names(buffalo)=="tag.local.identifier"] <- "id"
+names(buffalo)[names(buffalo)=="individual.taxon.canonical.name"] <- "pop.type"
+
+# Data Conversion
+buffalo$time <- as.POSIXct(strptime(buffalo$time,format="%Y-%m-%d %H:%M",tz="GMT"))
+
+#Display new names
+newnames <- colnames(buffalo)
+newnames
+head(buffalo)
 ```
 
-Number of rows in the khulan.test.data
-
+Number of rows in the buffalo data & data set structure 
 ```{r message=FALSE, warning=FALSE}
-nrow(khulan.test.data)
+length(table((buffalo$id)))
+
+str(buffalo)
 ```
+
 
 ### Subsample data within time interval
 --------------------------------------
 
 We select at most 6 individuals within 2009, time interval 50 hours, and accuracy 50 hours, and subsampling scheme for Realized Mobility Index
 ```{r message=FALSE, warning=FALSE}
-rmi.subsample.data <- subsample(khulan.test.data, start=c("2009-01-01 00:00"),end="2009-12-31 00:00",interval=c("50 hours"),accuracy=c("3 mins"),minIndiv=3,maxIndiv=6,mustIndiv=NULL,index.type="rmi")
+rmi.subsample.data <- subsample(dat=buffalo, start=c("2005-02-17 00:00:00"),end="2006-12-31 00:00:00",interval=c("50 hours"),accuracy=c("3 hours"),minIndiv=3,maxIndiv=6,mustIndiv=NULL,index.type="rmi")
+                                
+buffalo.indiv <- Individuals(rmi.subsample.data, id="id", time="time", x="x", y="y", group.by="pop.type", proj4string= CRS("+proj=utm +zone=28 +datum=WGS84"))
 
-head(rmi.subsample.data)
+head(coordinates(buffalo.indiv))
+bbox(buffalo.indiv)
+head(show(buffalo.indiv),2)
+head(SpatialPoints(buffalo.indiv), 2)
+coordnames(buffalo.indiv)
+
+buffalo.data.attr <- as.data.frame(buffalo.indiv)
+head(buffalo.data.attr)
+
+buffalo.individual.mcp <- mcp(buffalo.indiv[,"id"], percent = 100)
+buffalo.individual.mcp
+
+buffalo.population.mcp <- mcp.population(buffalo.indiv, percent = 100)
+buffalo.population.mcp
+
+show.mcp(buffalo.indiv, percent = 100, id="id")
+print(buffalo.indiv)
 ```
 
 Note, a number of rows in the rmi subsample dataset
 
 ```{r message=FALSE, warning=FALSE}
 nrow(rmi.subsample.data)
-
-```
-
-### Prepare data for the analysis in the spatial form
-----------------------------
-
-Create attribute data frame
-
-```{r message=FALSE, warning=FALSE}
-dt.rmi.data <- data.table(rmi.subsample.data)
-
-dt.rmi.data.attr  <- dt.rmi.data[,list(id=id, pop.type=pop.type, x=X,y=Y, time=time, time.lag=time.lag, age=age, elevation= elevation, behaviour = behaviour)]
-str(dt.rmi.data.attr)
-```
-
-Create spatial coordinates
-```{r message=FALSE, warning=FALSE}
-dt.rmi.data.xy <- dt.rmi.data[, list(x=X,y=Y)]
-
-str(dt.rmi.data.xy)
-```
-
-Create spatial points
-```{r message=FALSE, warning=FALSE}
-xy.sp.rmi.data <- SpatialPoints(dt.rmi.data.xy)
-```
-
-Create spatial points data frame with attributes
-```{r message=FALSE, warning=FALSE}
-xy.rmi.data.spdf <- SpatialPointsDataFrame(xy.sp.rmi.data, dt.rmi.data.attr)
-```
-
-Create Individuals data.frame - relocations of khulan data
-```{r message=FALSE, warning=FALSE}
-khulan.reloc.spatial <- Individuals(xy.rmi.data.spdf, group.by="pop.type")
-head(khulan.reloc.spatial)
 ```
 
 Analysis
 ----------------------------
 
-Compute individual mcp
-```{r message=FALSE, warning=FALSE}
-individual.mcp <- mcp(khulan.reloc.spatial[,1], percent = 100)
-```
-
-### Display individual mcp
-----------------------------------
-
-individual.mcp
-```{r message=FALSE, warning=FALSE}
-individual.mcp
-```
-
-### Compute population mcp
-----------------------------------
-```{r message=FALSE, warning=FALSE}
-population.mcp <- mcp.population(khulan.reloc.spatial, percent = 100)
-```
-
-* Display population mcp
-```{r message=FALSE, warning=FALSE}
-population.mcp
-```
-
 ### Compute Realized Mobility Index
 ----------------------------------
 ```{r message=FALSE, warning=FALSE}
-rmi.index.population <- rmi.index(khulan.reloc.spatial, percent = 100, id = "id")
+fg.pal <- color.palette(length(unique(buffalo.data.attr$pop.type)))
+bg.pal <- color.palette(length(unique(buffalo.data.attr$pop.type)), palette = c("Dark2"))  
 
-rmi.object <- RMIndex(rmi.index.population)
+plot(buffalo.individual.mcp, col=fg.pal)
+plot(buffalo.indiv, col="green")
+
+rmi.index.population <- rmi.index(buffalo.indiv, percent = 100, id = "id")
+
+plot(rmi.index.population)
 ```
 
 RMI Data 
 ```{r message=FALSE, warning=FALSE}
-rmi.object@data
+rmi.index.population
 ```
 
 ### RMI Summary
 ----------------------------------
 ```{r message=FALSE, warning=FALSE}
-summary(rmi.object)
+rmi.index.population
+summary(rmi.index.population)
+
 ```
 ### Plot Results
 ----------------------------------
 
 ```{r message=FALSE, warning=FALSE}
-par(mar = c(5,5, 2,0))
-plot(rmi.object)
+plot(rmi.index.population)
 ```
 

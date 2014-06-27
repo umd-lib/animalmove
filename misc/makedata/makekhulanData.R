@@ -89,3 +89,7 @@ head(khulan.test.data)
 unique(khulan.test.data$pop.type)
 save(khulan.test.data, file="/apps/git/animalmove/data/khulan.test.data.rda")
 
+buffalodata <- read.csv("./data/buffalo.csv", stringsAsFactors = FALSE, header =TRUE)
+buffalo <- data.frame(buffalodata)
+head(buffalo)
+save(buffalo, file="/apps/git/animalmove/data/buffalo.rda")

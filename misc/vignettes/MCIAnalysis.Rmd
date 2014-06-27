@@ -1,0 +1,200 @@
+<!--
+%\VignetteEngine{knitr::docco_classic}
+%\VignetteIndexEntry{An Introduction to the animalmove package}
+-->
+
+Movement Coordination Index
+=======================================
+
+
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(out.extra='style="display:block; margin: auto"', fig.align="center")
+```
+
+Load package library
+```{r results='hide', message=FALSE, warning=FALSE}
+library(animalmove)
+```
+
+Subsample Data
+------------
+
+Khulan dataset has been saved in the package data directory , and loaded on the package load.
+
+Raw **khulan** dataset contains unlaltered original data.
+
+```{r message=FALSE, warning=FALSE}
+data(khulan.raw.data)
+head(khulan.raw.data)
+```
+
+Number of rows in the khulan.raw.data
+```{r message=FALSE, warning=FALSE}
+nrow(khulan.raw.data)
+```
+
+
+For demonstration purposes we add a column that indicates a specie type to the data frame for each relocation data.
+
+Enhanced dataset has been saved into khulan.test.data a column pop.type, which indicates a specie type.
+
+Specie type assignment rule:  Individuals with ids 3,4,7, 6441 assigned to the specie1 type, and the rest is identified as specie2 type.
+
+```{r message=FALSE, warning=FALSE}
+data(khulan.test.data)
+head(khulan.test.data)
+```
+
+Number of rows in the khulan.test.data
+
+```{r message=FALSE, warning=FALSE}
+nrow(khulan.test.data)
+```
+
+### Subsample data within time interval
+--------------------------------------
+
+We select at most 6 individuals within 2009, time interval 50 hours, and accuracy 50 hours, and subsampling scheme for Realized Mobility Index
+```{r message=FALSE, warning=FALSE}
+mci.data <- subsample(khulan.test.data, start=c("2009-01-01 00:00"),end="2009-12-31 00:00",interval=c("50 hours"),accuracy=c("3 mins"),minIndiv=3,maxIndiv=6,mustIndiv=NULL,index.type="mci")
+
+head(mci.data)
+```
+
+Note, a number of rows in the mci subsample dataset
+
+```{r message=FALSE, warning=FALSE}
+nrow(mci.data)
+
+```
+
+### Prepare data for the analysis in the spatial form
+----------------------------
+
+Create attribute data frame
+
+```{r message=FALSE, warning=FALSE}
+dt.mci.data <- data.table(mci.data)
+
+dt.mci.data.attr  <- dt.mci.data[,list(id=id, pop.type=pop.type, x=X,y=Y, time=time, time.lag=time.lag, age=age, elevation= elevation, behaviour = behaviour)]
+str(dt.mci.data.attr)
+```
+
+Create spatial coordinates
+```{r message=FALSE, warning=FALSE}
+dt.mci.data.spatial <- dt.mci.data[, list(x=X,y=Y)]
+str(dt.mci.data.spatial)
+```
+
+Create spatial points
+```{r message=FALSE, warning=FALSE}
+xy.sp.mci.data <- SpatialPoints(dt.mci.data.spatial)
+```
+
+Create spatial points data frame with attributes
+```{r message=FALSE, warning=FALSE}
+xy.mci.data.spdf <- SpatialPointsDataFrame(xy.sp.mci.data, dt.mci.data.attr)
+str(xy.mci.data.spdf)
+```
+
+Create Individuals data.frame - relocations of khulan data
+```{r message=FALSE, warning=FALSE}
+khulan.reloc.spatial <- Individuals(xy.mci.data.spdf, group.by="pop.type")
+str(khulan.reloc.spatial)
+```
+
+Analysis - Khulan data
+----------------------------
+
+### Compute MCI 
+-----------------------------
+
+```{r message=FALSE, warning=FALSE}
+mci.khulan <- mci.index(khulan.reloc.spatial, group.by = c("pop.type"), time.lag = c("time.lag"))
+mci.khulan.object <- MCIndex(mci.khulan)
+mci.khulan.object
+plot(mci.khulan.object)
+```
+
+
+### Compute ANOVA
+-----------------------------
+```{r message=FALSE, warning=FALSE}
+anova.model <- aov.mci(mci.khulan.object)
+anova.model
+```
+### Tukey Test
+-----------------------------
+```{r message=FALSE, warning=FALSE}
+TukeyHSD(anova.model)
+TukeyHSD(mci.khulan.object)
+```
+
+### Kruskal Test
+-----------------------------
+```{r message=FALSE, warning=FALSE}
+kruskal.test(mci.khulan.object)
+kruskalmc(mci.khulan.object)
+```
+### Summary
+-----------------------------
+```{r message=FALSE, warning=FALSE}
+summary.MCIndex(mci.khulan.object)
+```
+
+Analysis - Paper data
+----------------------------
+```{r message=FALSE, warning=FALSE}
+mci <-  mci.index(allpopulations.spatial, group.by = c("pop.type"), time.lag = c("time.lag"))
+mci.object <- MCIndex(mci)
+```
+
+### Compute ANOVA
+-----------------------------
+```{r message=FALSE, warning=FALSE}
+anova.model <- aov.mci(mci.object)
+anova.model
+```
+### Tukey Test
+-----------------------------
+```{r message=FALSE, warning=FALSE}
+TukeyHSD(anova.model)
+TukeyHSD(mci.object)
+```
+
+### Kruskal Test
+-----------------------------
+```{r message=FALSE, warning=FALSE}
+kruskal.test(mci.object)
+kruskalmc(mci.object)
+```
+### Summary
+-----------------------------
+```{r message=FALSE, warning=FALSE}
+summary.MCIndex(mci.object)
+```
+
+### Plot
+-----------------------------
+```{r message=FALSE, warning=FALSE}
+colorCaribou = "pink" 
+colorGazelle = "lightblue"
+colorGuanaco = "khaki1"#"#FFFF99"
+colorMoose = "lightgreen"
+colorCaribou2 = "red" 
+colorGazelle2 = "blue"
+colorGuanaco2 =  "darkorange"
+colorMoose2 = "darkgreen"
+
+par(mar = c(5, 5, 2, 1))
+cexValue = 2
+
+boxplot(mci.index~factor(pop.type), data =mci, 
+        col = c(colorCaribou,colorGazelle,colorMoose), 
+        border =c(colorCaribou2,colorGazelle2,colorMoose2),
+        outline = F, lwd=2, boxwex = .5, cex = cexValue, cex.lab = cexValue,
+        cex.axis= cexValue,   frame = F, ylab = "Movement coordination index", xlab = NULL)
+
+lines(c(.7,3.3), c(0,0), lwd = 2, lty = 1, col = 1) 
+```

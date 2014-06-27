@@ -37,9 +37,9 @@ length(table((buffalodata$id)))
 
 str(buffalodata)
 
-#rmi.subsample.data <- subsample(dat=buffalodata, start=c("2005-02-17 00:00:00"),end="2006-12-31 00:00:00",interval=c("50 hours"),accuracy=c("3 mins"),minIndiv=3,maxIndiv=6,mustIndiv#=NULL,index.type="rmi")
-
-buffalo.indiv <- Individuals(buffalodata, id="id", time="time", x="x", y="y", group.by="pop.type", proj4string= CRS("+proj=utm +zone=28 +datum=WGS84"))
+rmi.subsample.data <- subsample(dat=buffalodata, start=c("2005-02-17 00:00:00"),end="2006-12-31 00:00:00",interval=c("50 hours"),accuracy=c("3 hours"),minIndiv=3,maxIndiv=6,mustIndiv=NULL,index.type="rmi")
+                                
+buffalo.indiv <- Individuals(rmi.subsample.data, id="id", time="time", x="x", y="y", group.by="pop.type", proj4string= CRS("+proj=utm +zone=28 +datum=WGS84"))
 
 head(coordinates(buffalo.indiv))
 bbox(buffalo.indiv)
@@ -67,9 +67,15 @@ plot(buffalo.indiv, col="green")
 
 rmi.index.population <- rmi.index(buffalo.indiv, percent = 100, id = "id")
 
+rmi.index.population
+
 summary(rmi.index.population)
 
 plot(rmi.index.population)
+
+#with(buffalo.individual.mcp, boxplot(buffalo.individual.mcp$area~buffalo.individual.mcp$id))
+
+#hist(buffalo.individual.mcp$area~buffalo.individual.mcp$id)
 
 ##p <- ggplot(rmidf, aes(y = rmidf$rmi.index, x =id))
 ##p + geom_jitter(position = position_jitter(w = 0.1, h = 0.1)) + facet_grid(. ~ind.home.range, scales = "free", space = "free") + theme_bw()
