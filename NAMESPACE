@@ -18,11 +18,12 @@ import(data.table)
 import(RColorBrewer)
 
 ## other CRAN packages:
+import(raster)
 
 
 exportClasses(Individuals,RMIndex,MCIndex, PDIndex)
 
-exportMethods(group.by, populations, summary, print, rmi.index, plot, mci.index, aov, TukeyHSD, kruskal.test, kruskalmc, pdi.index, summary.pdi, polygon, show.mcp)
+exportMethods(group.by, populations, summary, print, rmi.index, plot, mci.index, aov, TukeyHSD, kruskal.test, kruskalmc, pdi.index, summary.pdi, polygon, show.mcp, importMoveTracks, subsample.reloc)
 
 export(plot)
 export(subsample)

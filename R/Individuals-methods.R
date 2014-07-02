@@ -1,7 +1,7 @@
 "Individuals" =  function(data, id, time, x, y, group.by, proj4string=NULL... ) {
     
     result <- FALSE
-       
+    
     if (is.data.frame(data)){
         
         if (missing(id) || missing(x) || missing(y) || missing (time) || missing (group.by)){
@@ -33,13 +33,13 @@
     data.xy <- data[, c(x=x,y=y)]
     attr.columns <- setdiff(colnames(data),colnames(data.xy))
     data.attr  <- data[,attr.columns]
-      
+    
     spatial.points <- SpatialPoints(data.xy)
     spatial.df <- SpatialPointsDataFrame(coords = spatial.points, data = data.attr, 
                                          proj4string = proj4string, match.ID = TRUE)
-                                         
+    
     new ("Individuals", spatial.df, group.by = group.by)
-        
+    
 }
 
 setGeneric("group.by", function(this) {
@@ -52,7 +52,6 @@ setMethod("group.by", "Individuals",
           }
 )
 
-#'@exportMethod populations
 setGeneric("populations", function(this) {
     standardGeneric("populations")
 })
@@ -63,9 +62,8 @@ setMethod("populations", "Individuals",
           }
 )
 
-#'@exportMethod rmi.index
 setGeneric("rmi.index", function(this, percent = 95, unin=c("m", "km"),
-                           unout=c("ha", "km2", "m2"), id) {
+                                 unout=c("ha", "km2", "m2"), id) {
     standardGeneric("rmi.index")
 })
 
@@ -75,11 +73,11 @@ setMethod("rmi.index", "Individuals",
               
               unin <- match.arg(unin)
               unout <- match.arg(unout)
-                       
+              
               index <- compute.rmi.index(this, percent,
-                                            unin = unin,
-                                            unout = unout, id=id)
-             RMIndex(index)
+                                         unin = unin,
+                                         unout = unout, id=id)
+              RMIndex(index)
           }
 )
 
@@ -103,23 +101,6 @@ as.data.frame.IndividualsDataFrame = function(x, ...)  {
 setAs("Individuals", "data.frame", function(from)
     as.data.frame.IndividualsDataFrame(from))
 
-
-#'
-#' @description
-#' \code{print.Individuals} 
-#'
-#' @details
-#' This function prints Individuals
-#' by the \code{\link{mc}} function.
-#'
-#' @param x an object of class \code{Individuals}.
-#' @param ... additional arguments passed to the function.
-#' @method print Inidividuals
-#' @export
-#' @return the input object is returned silently.
-#' @author 
-#' @examples
-#' print(Inidviduals)
 .print.Individuals <- function(x, ...){
     if (!inherits(x, "Individuals")) #1
         stop("Object must be of class 'Individuals'")
@@ -129,9 +110,8 @@ setAs("Individuals", "data.frame", function(from)
     cat("...........", "\n")
     print("bbox:")
     bbox(x)
- }
+}
 
-#'@exportMethod show.mcp
 setGeneric("show.mcp", function(x, percent = 95, unin=c("m", "km"),
                                 unout=c("ha", "km2", "m2"), id) {
     standardGeneric("show.mcp")
@@ -153,7 +133,7 @@ setMethod("show.mcp", "Individuals",
                       unout=c("ha", "km2", "m2"), id){
     if (!inherits(x, "Individuals")) #1
         stop("Object must be of class 'Individuals'")
-        
+    
     individual.mcp <- mcp(x[,id], percent = percent,
                           unin=unin, unout=unout)
     
@@ -168,13 +148,34 @@ setMethod("show.mcp", "Individuals",
     
 }
 
-#' Print Indviduals object
-#' @param Inidviduals
-#' @rdname Individuals
-#' @exportMethod
 setMethod("print", signature(x="Individuals"),
           function(x){
-              
               .print.Individuals(x)
           }
 )
+
+setGeneric("subsample.reloc", function(data, startTime, endTime, interval=c("24 hours","48 hours"),accuracy=c("3 mins","1 mins"),minIndiv=3,maxIndiv=4,mustIndiv=NULL, completeSetsOnly=TRUE, index.type) {
+    standardGeneric("subsample.reloc")
+})
+
+setMethod("subsample.reloc", "Individuals",
+          function(data, startTime, endTime, interval=c("24 hours","48 hours"),accuracy=c("3 mins","1 mins"),minIndiv=3,maxIndiv=4,mustIndiv=NULL, completeSetsOnly=TRUE, index.type) {
+              
+              proj4string <- buffalo.indiv@proj4string
+              subsapmpled.data <- subsample(dat=as.data.frame(data), start=startTime,end=endTime,interval=interval,accuracy=accuracy,minIndiv=minIndiv,maxIndiv=maxIndiv,mustIndiv=NULL,index.type=index.type)
+              
+              str(subsapmpled.data)
+              result <- importMoveTracks(subsapmpled.data,,,,proj4string)
+              return(result)
+            
+          }
+)
+
+setMethod("summary", "Individuals", function(object, ...) {
+    getMethod("print","Spatial")(object) 
+    time.range <- time.range(object)
+    cat("Time range:",paste(time.range, collapse=" ... "),capture.output(round(difftime(time.range[2],time.range[1]))), " (start ... end, duration) \n")  
+    cat("Average Duration between relocations:",  paste(durationSummary(object), "\n"), hours)
+    cat("Specie Populations:", paste(collapse=", ", populations(object)),"\n")
+})
+

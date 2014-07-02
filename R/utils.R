@@ -1,3 +1,4 @@
+#' @author Irina Belyaeva
 color.palette <- function(colourCount = 3, palette = c("Pastel2")){
     
     colourCount <- colourCount
@@ -10,6 +11,7 @@ color.palette <- function(colourCount = 3, palette = c("Pastel2")){
     
 }
 
+#' @author Irina Belyaeva
 isColumnExists <- function (column, data){
     
     result <- FALSE
@@ -23,6 +25,7 @@ isColumnExists <- function (column, data){
     result 
 }
 
+#' @author Irina Belyaeva
 checkColumns <- function (columns, data){
     resultlist <- unlist(lapply(columns, isColumnExists, data = data))
     return (all(resultlist))

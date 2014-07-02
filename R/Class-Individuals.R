@@ -17,7 +17,7 @@
 #' @rdname Individuals
 #' @aliases Individuals-class
 #' @exportClass Individuals
-#' @author Irina Belyaeva
+#' @author Irina Belyaeva 
 setClass("Individuals",
     representation=representation(group.by="character"),
     contains = "SpatialPointsDataFrame",
