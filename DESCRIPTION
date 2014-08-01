@@ -2,20 +2,40 @@ Package: animalmove
 Type: Package
 Version: 0.1.0.99
 Date: 2014-02-10
-Author: Thomas Mueller <muellert@gmail.com>
+Title: Analysis of animal population-level movement patterns
+Maintainer: Thomas Mueller <muellert@gmail.com>
 Authors@R: c(person("Thomas Mueller", role = c("aut", "cre"), email =
     "<muellert@gmail.com>"), person("Ellen Aikens", role = c("aut", "cre"),
-    email = "<AikensE@si.edu>"), person("Irina Belyaeva", role = c ("cre"),
-    email = "ibelyaev@umd.edu"))
-Maintainer: Thomas Mueller <muellert@gmail.com>
-Title: Analysis of animal population-level movement patterns
+    email = "<AikensE@si.edu>"), person("Irina Belyaeva", role = c
+    ("aut","cre"), email = "irenbelyaeva@gmail.com"), person ("Martin Rimmler",
+    role=c("aut"), email="martin.rimmler@gmail.com"))
+Author: Thomas Mueller [aut, cre], Ellen Aikens [aut, cre], Irina Belyaeva
+    [aut, cre], Martin Rimmler [aut]
 Description: animalmove is a package that contains functions to analyze and
     visualize animal movement dynamic at the population level. It includes
     statistical analysis and comparison of multiple species relocation data.
-Imports:pgirmess, maptools
-Depends: R (>= 3.0.2), methods, chron, splancs, adehabitatHR, sciplot, sp, lme4, languageR, MASS, Hmisc, rgdal (>= 0.8-7), sqldf, data.table, RColorBrewer
+Imports:
+    pgirmess,
+    maptools
+Depends:
+    R (>= 3.0.2),
+    methods,
+    chron,
+    splancs,
+    adehabitatHR,
+    sciplot,
+    sp,
+    lme4,
+    languageR,
+    MASS,
+    Hmisc,
+    rgdal (>= 0.8-7),
+    sqldf,
+    data.table,
+    raster,
+    RColorBrewer
 License: GPL (>= 3)
-url: http://www.clfs.umd.edu/biology/faganlab/movement/index.html
+URL: http://www.clfs.umd.edu/biology/faganlab/movement/index.html
 LazyData: true
 Suggests:
     RCurl,
@@ -24,7 +44,7 @@ Suggests:
     knitr,
     markdown,
     ggmap,
-    mapproj   
+    mapproj
 Packaged: 2014-02-21 09:46:59 EST; ibelyaeva
 NeedsCompilation: yes
 Repository: CRAN

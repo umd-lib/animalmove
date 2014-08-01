@@ -70,12 +70,6 @@ setMethod("summary", "RMIndex", function(object, ...) {
     tapply(df$rmi.index, df$pop.type, summary)
 }  )
 
-setMethod("summary", "data.frame",
-          function(object, ...) {
-              df = as.data.frame(object)
-              tapply(df$rmi.index, df$pop.type, summary)
-          }          
-)
 
 #' Helper method to plot RMIndex
 #' @param RMIndex

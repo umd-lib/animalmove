@@ -238,14 +238,7 @@ setMethod("kruskalmc", signature(resp = "MCIndex"),
           }
 )
 
-#' Prints Summary for the Movement Coordination Index
-#' This includes statistical tests:
-#' ANOVA
-#' TukeyHSD
-#' Kruskaltest
-#' Kruskalmc
-#' @export
-#' @S3method
+
 summary.MCIndex <- function(object, ...){
     
     if (!inherits(object, "MCIndex")){
