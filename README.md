@@ -66,3 +66,6 @@ You may see the following warning message. Please, ignore (this is a well-known 
 In FUN(X[[2L]], ...) :
   Created a package name, ‘2014-04-01 23:37:06’, when none found
 ```
+## License
+
+This package is free and open source software, licensed under [GPLv3](https://www.gnu.org/licenses/gpl-3.0-standalone.html).
