@@ -1,13 +1,12 @@
 animalmove: Analysis of animal population-level patterns in R. 
 ====
 
-## Features
+Introduction
+------------
 
-* [Animal Movement Indices](vignettes/IntrotoAnimalMove.md)
-  
-  * Realized Mobility Index
-  * Movement Coordination Index
-  * Population Dispersion Index
+The  **animalmove** package provides a series of statistical analyses of spatio-temporal animal movement patterns at the population level, as originally described in the paper **"How  landscape dynamics link individual- to population-level movement patterns: a multispecies   comparison of ungulate relocation data"**, Mueller, Thomas, et al. Global Ecology and    Biogeography 20, no. 5 (2011): 683–94. [DOI: 10.1111/j.1466-8238.2010.00638.x](http://doi.org/10.1111/j.1466-8238.2010.00638.x).
+
+See [Introduction to the *animalmove* package](vignettes/IntrotoAnimalMove.md) for more information on using the package and the provided quantified measures for population-level movement patterns.
 
 ## Installation
 
@@ -21,13 +20,7 @@ animalmove: Analysis of animal population-level patterns in R.
 *Install Package from Github*
 
 ```
-> install_github(repo="umd-lib/animalmove", auth_user="github_username", password="github_password")
-
-```
-Example command
-
-```
-> install_github(repo="umd-lib/animalmove", auth_user="ibelyaevumd", password="xxxx")
+> install_github(repo="umd-lib/animalmove")
 
 ```
 
