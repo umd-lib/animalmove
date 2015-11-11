@@ -1,4 +1,4 @@
-animalmove: Analysis of animal population-level patterns in R. 
+animalmove: Analysis of animal population-level movement patterns in R. 
 ====
 
 Discontinued
