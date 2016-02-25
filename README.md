@@ -3,7 +3,7 @@ animalmove: Analysis of animal population-level movement patterns in R.
 
 Discontinued
 -----------
-Further work on this version of the animalmove package is discontinued.  See http://www.clfs.umd.edu/biology/faganlab/movement/ for any future versions of the package as well as subsequent work on the ctmm package for Continuous-time movement modeling.
+Further work on this version of the animalmove package is discontinued.  See http://www.clfs.umd.edu/biology/faganlab/movement/ for any future versions of the package as well as subsequent work on the ctmm package for Continuous-Time Movement Modeling, which is available from the CRAN archive at https://cran.r-project.org/web/packages/ctmm/.
 
 Introduction
 ------------
